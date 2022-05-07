@@ -8,6 +8,7 @@ namespace ScriptDelivery.Lib
 {
     internal static class StringExtentions
     {
+        /*
         public static bool IsLike(this string s, string text)
         {
             string patternString = System.Text.RegularExpressions.Regex.Replace(text, ".",
@@ -24,6 +25,7 @@ namespace ScriptDelivery.Lib
                 patternString, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             return pattern.IsMatch(s);
         }
+        */
 
         public static System.Text.RegularExpressions.Regex GetWildcardPattern(this string s)
         {

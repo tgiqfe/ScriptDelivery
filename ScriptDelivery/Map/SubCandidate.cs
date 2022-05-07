@@ -11,9 +11,9 @@ namespace ScriptDelivery.Map
         public string Name { get; set; }
         public string[] Candidate { get; set; }
 
-        public SubCandidate(string name, params string[] candidate)
+        public SubCandidate(params string[] candidate)
         {
-            this.Name = name;
+            this.Name = candidate[0];
             this.Candidate = candidate;
         }
 

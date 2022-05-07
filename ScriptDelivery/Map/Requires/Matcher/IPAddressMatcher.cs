@@ -34,7 +34,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
         private static NetworkInfo _info = null;
 
-        public bool IsMatch(MatchType matchType, string text)
+        public bool IsMatch(MatchType matchType)
         {
             _info ??= new NetworkInfo();
 

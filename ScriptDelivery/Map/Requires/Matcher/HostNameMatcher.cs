@@ -25,7 +25,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
         [MatcherParameter, Keys("End")]
         public string EndName { get; set; }
 
-        public bool IsMatch(MatchType matchType, string text)
+        public bool IsMatch(MatchType matchType)
         {
             return matchType switch
             {
@@ -46,7 +46,8 @@ namespace ScriptDelivery.Map.Requires.Matcher
         {
             if (Name.Contains("*"))
             {
-                return Environment.MachineName.IsLike(this.Name);
+                return this.Name.GetWildcardPattern().IsMatch(Environment.MachineName);
+                //return Environment.MachineName.IsLike(this.Name);
             }
             return Environment.MachineName.Equals(Name, StringComparison.OrdinalIgnoreCase);
         }

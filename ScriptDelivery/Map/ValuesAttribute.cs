@@ -31,21 +31,29 @@ namespace ScriptDelivery.Map
             {
                 {
                     "Mode", new SubCandidate[]{
-                        new SubCandidate("none", "none", "no"),
-                        new SubCandidate("and", "and", "all") ,
-                        new SubCandidate("or", "or", "any") }
+                        new SubCandidate("none", "no"),
+                        new SubCandidate("and", "all") ,
+                        new SubCandidate("or", "any") }
                 },
                 {
                     "Match", new SubCandidate[]{
-                        new SubCandidate("none", "none", "no"),
-                        new SubCandidate("equal", "equal", "equals"),
-                        new SubCandidate("range", "range", "within", "numberrange"),
-                        new SubCandidate("namerange", "namerange"),
-                        new SubCandidate("innetwork", "innetwork", "insame"),
-                        new SubCandidate("file", "file"),
-                        new SubCandidate("directory", "directory", "folder"),
-                        new SubCandidate("registry", "registry", "reg") }
+                        new SubCandidate("none", "no"),
+                        new SubCandidate("equal", "equals"),
+                        new SubCandidate("range", "within", "numberrange"),
+                        new SubCandidate("namerange"),
+                        new SubCandidate("innetwork", "insame"),
+                        new SubCandidate("file", "files"),
+                        new SubCandidate("directory", "folder", "directories", "folders"),
+                        new SubCandidate("registry", "reg", "registories") }
                 },
+                {
+                    "Location", new SubCandidate[]{
+                        new SubCandidate("all"),
+                        new SubCandidate("process", "proc"),
+                        new SubCandidate("user"),
+                        new SubCandidate("machine", "computer"),
+                    }
+                }
             };
         }
 
