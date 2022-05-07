@@ -8,17 +8,19 @@ namespace ScriptDelivery.Map
 {
     internal class KeysAttribute : Attribute
     {
-        private string _keyword { get; set; }
+        private string[] _keywords { get; set; }
 
-        public KeysAttribute(string keyword)
+        public KeysAttribute(params string[] keywords)
         {
-            this._keyword = keyword;
+            this._keywords = keywords;
         }
 
         public string[] GetCandidate()
         {
             _map ??= LoadMap();
-            return _map[_keyword];     //  例外対策は無し。もし例外が発生した場合はコード見直し
+
+            var list = new List<string>();    //  例外対策は無し。もし例外が発生した場合はコード見直し
+            return _keywords.Select(x => _map[x]).Aggregate((x, y) => x.Concat(y).ToArray());
         }
 
         #region Key candidate map
@@ -35,6 +37,8 @@ namespace ScriptDelivery.Map
                 { "IPAddress", new string[] { "ipaddress", "address", "ipaddr", "addr", "ipaddresses" } },
                 { "NetworkAddress", new string[] { "networkaddress", "networkaaddr", "nwaddress", "nwaddr", "network", "nw" } },
                 { "Interface", new string[]{ "interface", "if"} },
+                { "Key", new string[] { "key", "keyword" } },
+                { "Value", new string[] {"value", "val" } },
             };
         }
 
