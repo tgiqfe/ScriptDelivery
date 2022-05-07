@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Management;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace ScriptDelivery.Lib
 {
@@ -41,6 +42,9 @@ namespace ScriptDelivery.Lib
 
         public List<NIC> NICs { get; set; }
 
+        //private static Regex _regex_ip =
+        //    new Regex(@"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$");
+
         public NetworkInfo()
         {
             this.NICs = new List<NIC>();
@@ -49,7 +53,7 @@ namespace ScriptDelivery.Lib
                 GetInstances().
                 OfType<ManagementObject>().
                 Where(x => x["NetConnectionID"] != null);
-            
+
             var nis = NetworkInterface.GetAllNetworkInterfaces();
 
             foreach (var adapter in adapters)
@@ -71,8 +75,50 @@ namespace ScriptDelivery.Lib
                     Name = adapter["NetConnectionID"] as string,
                     GUID = guid,
                     AddressSets = addressSets
-                }) ;
+                });
             }
+        }
+
+        public static AddressSet GetAddressSet(string text)
+        {
+            var addressSet = new AddressSet() { IPv4 = true, };
+
+            string textPre = text;
+            string textSuf = "24";
+            if (textPre.Contains("/"))
+            {
+                textSuf = textPre.Substring(textPre.IndexOf("/") + 1);
+                textPre = textPre.Substring(0, textPre.IndexOf("/"));
+            }
+            if (int.TryParse(textSuf, out int tempInt))
+            {
+                string bits = new string('1', tempInt).PadRight(32, '0');
+                addressSet.PrefixLength = tempInt;
+                addressSet.SunbnetMask = new IPAddress(
+                    new byte[4] {
+                        Convert.ToByte(bits.Substring(0, 8)),
+                        Convert.ToByte(bits.Substring(8, 8)),
+                        Convert.ToByte(bits.Substring(16, 8)),
+                        Convert.ToByte(bits.Substring(24, 8))
+                    });
+            }
+            else if (IPAddress.TryParse(textSuf, out IPAddress subnetMask))
+            {
+                addressSet.SunbnetMask = subnetMask;
+                byte[] bytes = subnetMask.GetAddressBytes();
+                string bits = string.Format("{0}{1}{2}{3}",
+                    Convert.ToString(bytes[0], 2),
+                    Convert.ToString(bytes[1], 2),
+                    Convert.ToString(bytes[2], 2),
+                    Convert.ToString(bytes[3], 2));
+                addressSet.PrefixLength = bits.Length - bits.Replace("1", "").Length;
+            }
+
+            addressSet.IPAddress = IPAddress.TryParse(textPre, out IPAddress ipAddress) ?
+                ipAddress :
+                null;
+
+            return addressSet;
         }
     }
 }

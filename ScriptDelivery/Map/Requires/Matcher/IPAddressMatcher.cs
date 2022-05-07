@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Lib;
+using System.Net.Sockets;
+using System.Net;
 
 namespace ScriptDelivery.Map.Requires.Matcher
 {
     /// <summary>
     /// IPアドレスのマッチ確認
     /// - Equal     : 完全一致確認。ワイルドカードで部分確認にも対応
-    /// - Range     : 第四オクテットのみ範囲確認
-    /// - InNetwork : 指定のネットワークアドレスに所属しているかどうかの確認
+    /// - Range     : IPv4アドレスで、第四オクテットのみ範囲確認
+    /// - InNetwork : IPv4アドレスで、指定のネットワークアドレスに所属しているかどうかの確認
     /// </summary>
     internal class IPAddressMatcher : MatcherBase
     {
@@ -53,17 +55,26 @@ namespace ScriptDelivery.Map.Requires.Matcher
         /// <returns></returns>
         private bool EqualMatch()
         {
-            var nics = GetNICsFromInterface();
+            var _nics = GetNICsFromInterface();
 
             if (IPAddress.Contains("*"))
             {
                 var pattern = this.IPAddress.GetWildcardPattern();
-                return nics.Any(x => x.GetIPAddresses().Any(y => pattern.IsMatch(y)));
+                foreach (var nic in _nics)
+                {
+                    bool ret = nic.GetIPAddresses().Any(y => pattern.IsMatch(y));
+                    if (ret) { return true; }
+                }
             }
             else
             {
-                return nics.Any(x => x.GetIPAddresses().Any(y => y == IPAddress));
+                foreach (var nic in _nics)
+                {
+                    bool ret = nic.GetIPAddresses().Any(y => y == IPAddress);
+                    if (ret) { return true; }
+                }
             }
+            return false;
         }
 
         /// <summary>
@@ -72,8 +83,25 @@ namespace ScriptDelivery.Map.Requires.Matcher
         /// <returns></returns>
         private bool RangeMatch()
         {
+            var _nics = GetNICsFromInterface();
 
+            int startNum = int.TryParse(this.StartAddress, out int tempStart) ? tempStart : 0;
+            int endNum = int.TryParse(this.EndAddress, out int tempEnd) ? tempEnd : 0;
 
+            foreach (var nic in _nics)
+            {
+                foreach (var addressSet in nic.AddressSets)
+                {
+                    if (addressSet.IPv4)
+                    {
+                        byte[] bytes = addressSet.IPAddress.GetAddressBytes();
+                        if (bytes[3] >= startNum && bytes[3] <= endNum)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
             return false;
         }
 
@@ -83,6 +111,32 @@ namespace ScriptDelivery.Map.Requires.Matcher
         /// <returns></returns>
         private bool InNetworkMatch()
         {
+            var _nics = GetNICsFromInterface();
+
+            var nwAddressSet = NetworkInfo.GetAddressSet(this.NetworkAddress);
+            byte[] subnetMaskBytes = nwAddressSet.SunbnetMask.GetAddressBytes();
+
+            foreach (var nic in _nics)
+            {
+                foreach (var addressSet in nic.AddressSets)
+                {
+                    if (addressSet.IPv4)
+                    {
+                        byte[] ipAddressBytes = addressSet.IPAddress.GetAddressBytes();
+                        var tempAddress = new IPAddress(new byte[4]
+                        {
+                            (byte)(ipAddressBytes[0] & subnetMaskBytes[0]),
+                            (byte)(ipAddressBytes[1] & subnetMaskBytes[1]),
+                            (byte)(ipAddressBytes[2] & subnetMaskBytes[2]),
+                            (byte)(ipAddressBytes[3] & subnetMaskBytes[3])
+                        });
+                        if (tempAddress.Equals(nwAddressSet.IPAddress))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
             return false;
         }
 
