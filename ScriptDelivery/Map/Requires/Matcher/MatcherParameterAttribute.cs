@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScriptDelivery.Map.Requires.Matcher
+{
+    internal class MatcherParameterAttribute : Attribute
+    {
+        public bool Unsigned { get; set; }
+
+        public char Delimiter { get; set; }
+
+        public char EqualSign { get; set; }
+    }
+}
