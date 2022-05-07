@@ -13,8 +13,8 @@ namespace ScriptDelivery.Map.Requires
         Range,          //  末尾数字部分のみの範囲判定。IPアドレスの場合は第四オクテットのみ
         NameRange,      //  ホスト名の前半部分と数字の範囲で判定
         InNetwork,      //  IPアドレスがネットワークアドレスの範囲かどうか
-        File,           //  ファイルの有無判定
-        Directory,      //  フォルダーの有無判定
-        Registry        //  レジストリキー、レジストリ値の有無判定
+        File,           //  ファイルに関する判定
+        Directory,      //  フォルダーに関する判定
+        Registry        //  レジストリキー、レジストリ値に関する判定
     }
 }

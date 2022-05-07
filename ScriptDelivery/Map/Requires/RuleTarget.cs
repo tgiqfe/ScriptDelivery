@@ -12,8 +12,7 @@ namespace ScriptDelivery.Map.Requires
         HostName,
         IPAddress,
         Env,
-        File,
-        Directory,
-        Registry
+        Exists,
+        Registy,
     }
 }
