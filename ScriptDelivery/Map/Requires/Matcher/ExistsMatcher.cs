@@ -11,7 +11,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
 {
     internal class ExistsMatcher : MatcherBase
     {
-        [MatcherParameter(Mandatory = true), Keys("Path", "RegistryKey")]
+        [MatcherParameter(Mandatory = true, Expand = true), Keys("Path", "RegistryKey")]
         public string Path { get; set; }
 
         [MatcherParameter, Keys("Name", "RegistryName")]

@@ -12,6 +12,8 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
         public int MandatoryAny { get; set; }
 
+        public bool Expand { get; set; }
+
         public bool Unsigned { get; set; }
 
         public char Delimiter { get; set; }

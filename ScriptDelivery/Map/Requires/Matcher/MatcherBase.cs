@@ -35,7 +35,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
                     if (type == typeof(string))
                     {
-                        SetString(prop, matchValue);
+                        SetString(prop, matchValue, paramAttr.Expand);
                     }
                     else if (type == typeof(bool?))
                     {
@@ -51,11 +51,11 @@ namespace ScriptDelivery.Map.Requires.Matcher
                     }
                     else if (type == typeof(string[]))
                     {
-                        SetStrings(prop, matchValue, paramAttr.Delimiter);
+                        SetStrings(prop, matchValue, paramAttr.Delimiter, paramAttr.Expand);
                     }
                     else if (type == typeof(Dictionary<string, string>))
                     {
-                        SetDictionary(prop, matchValue, paramAttr.Delimiter, paramAttr.EqualSign);
+                        SetDictionary(prop, matchValue, paramAttr.Delimiter, paramAttr.EqualSign, paramAttr.Expand);
                     }
                     else if ((type = Nullable.GetUnderlyingType(type)).IsEnum)
                     {
@@ -67,8 +67,12 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
         #region Set paremter pivate methods
 
-        private void SetString(PropertyInfo prop, string val)
+        private void SetString(PropertyInfo prop, string val, bool expand)
         {
+            if (expand)
+            {
+                val = ExpandEnvironment(val);
+            }
             prop.SetValue(this, val);
         }
 
@@ -96,16 +100,17 @@ namespace ScriptDelivery.Map.Requires.Matcher
             prop.SetValue(this, DateTime.TryParse(val, out DateTime dt) ? dt : null);
         }
 
-        public void SetStrings(PropertyInfo prop, string val, char pDelimiter)
+        public void SetStrings(PropertyInfo prop, string val, char pDelimiter, bool expand)
         {
             char delimiter = val.Contains(pDelimiter) ? pDelimiter : '\n';
             string[] array = val.Split(delimiter).
                 Select(x => x.Trim()).
+                Select(x => expand ? ExpandEnvironment(x) : x).ToArray().
                 ToArray();
             prop.SetValue(this, array);
         }
 
-        public void SetDictionary(PropertyInfo prop, string val, char pDelimiter, char equalSign)
+        public void SetDictionary(PropertyInfo prop, string val, char pDelimiter, char equalSign, bool expand)
         {
             var dictionary = new Dictionary<string, string>();
 
@@ -113,6 +118,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
             val.Split(delimiter).
                 Select(x => x.Trim()).
                 Where(x => x.Contains(equalSign)).
+                Select(x => expand ? ExpandEnvironment(x) : x).ToArray().
                 ToList().
                 ForEach(x =>
                 {
@@ -120,7 +126,6 @@ namespace ScriptDelivery.Map.Requires.Matcher
                     string itemValue = x.Substring(x.IndexOf(equalSign) + 1).Trim();
                     dictionary[itemKey] = itemValue;
                 });
-
             prop.SetValue(this, dictionary);
         }
 
@@ -142,9 +147,63 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
         #endregion
 
-        public void CheckParam()
+        /// <summary>
+        /// 必要なパラメータがセットされているかどうかをチェック
+        /// </summary>
+        public bool CheckParam()
         {
-            //  パラメータの有無チェック
+            bool ret = true;
+
+            var props = this.GetType().GetProperties(
+                BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+            var mAny = new Dictionary<int, bool>();
+            foreach (var prop in props)
+            {
+                var paramAttr = prop.GetCustomAttribute<MatcherParameterAttribute>();
+                if (paramAttr == null) { continue; }
+
+                object val = prop.GetValue(this);
+                if (paramAttr.Mandatory)
+                {
+                    ret &= IsDefined(val);
+                }
+                if (paramAttr.MandatoryAny > 0)
+                {
+                    if (!mAny.ContainsKey(paramAttr.MandatoryAny))
+                    {
+                        mAny[paramAttr.MandatoryAny] = true;
+                    }
+                    mAny[paramAttr.MandatoryAny] &= IsDefined(val);
+                }
+            }
+            if (mAny.Count > 0) { ret &= mAny.Any(x => x.Value); }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 値がセット済みかどうか
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        protected bool IsDefined(object obj)
+        {
+            return obj switch
+            {
+                string s => s != null,
+                string[] ar => (ar?.Length > 0),
+                Dictionary<string, string> dic => (dic?.Count > 0),
+                _ => obj != null,
+            };
+        }
+
+        protected string ExpandEnvironment(string text)
+        {
+            for (int i = 0; i < 5 && text.Contains("%"); i++)
+            {
+                text = Environment.ExpandEnvironmentVariables(text);
+            }
+            return text;
         }
 
         public virtual bool IsMatch(MatchType matchType) { return false; }
