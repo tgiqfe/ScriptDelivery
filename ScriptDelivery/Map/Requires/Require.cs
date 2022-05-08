@@ -10,9 +10,11 @@ namespace ScriptDelivery.Map.Requires
     internal class Require
     {
         [YamlMember(Alias = "mode")]
-        public RequireMode? RequireMode { get; set; }
+        public string RequireMode { get; set; }
 
         [YamlMember(Alias = "rule")]
         public List<RequireRule> RequireRule { get; set; }
+
+        //  RequireModeの値を候補から取り出す処理をここに
     }
 }
