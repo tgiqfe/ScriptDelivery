@@ -10,10 +10,10 @@ namespace ScriptDelivery.Map.Requires
 {
     internal class RequireRule
     {
-        [YamlMember(Alias = "target")]
+        [YamlMember(Alias = "target"), Values("Target")]
         public string RuleTarget { get; set; }
 
-        [YamlMember(Alias = "match")]
+        [YamlMember(Alias = "match"), Values("Match")]
         public string MatchType { get; set; }
 
         [YamlMember(Alias = "invert")]
@@ -24,6 +24,33 @@ namespace ScriptDelivery.Map.Requires
 
         //  RuleTargetの値を候補から取り出す処理をここに
         //  MatchTypeの値を候補から取り出す処理をここに
+
+
+        [YamlIgnore]
+        public RuleTarget enum_RuleTarget
+        {
+            get
+            {
+                _enum_RuleTarget ??= ValuesAttribute.GetEnumValue<RuleTarget>(
+                    this.GetType().GetProperty("RuleTarget"), this.RuleTarget);
+                return (RuleTarget)_enum_RuleTarget;
+            }
+        }
+        private RuleTarget? _enum_RuleTarget;
+
+        [YamlIgnore]
+        public MatchType enum_MatchType
+        {
+            get
+            {
+                _enum_MatchType ??= ValuesAttribute.GetEnumValue<MatchType>(
+                    this.GetType().GetProperty("MatchType"), this.MatchType);
+                return (MatchType)_enum_MatchType;
+            }
+        }
+        private MatchType? _enum_MatchType;
+
+
 
         public bool Match()
         {

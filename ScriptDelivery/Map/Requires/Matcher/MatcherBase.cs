@@ -140,6 +140,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
                     if (enumText != null)
                     {
                         prop.SetValue(this, Enum.Parse(type, enumText, true));
+                        break;
                     }
                 }
             }

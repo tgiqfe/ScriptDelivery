@@ -1,75 +1,63 @@
 ﻿using ScriptDelivery.Lib;
 using System.IO;
 using System.Text.RegularExpressions;
+using ScriptDelivery.Map;
+using ScriptDelivery.Map.Requires;
+using ScriptDelivery.Map.Works;
 
-
-//  C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe
-string wildPath1 = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe";
-string wildPath2 = @"C:\Windows\Microsoft.NET\Framework64\v4*\InstallUtil.exe";
-string wildPath3 = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\install*.exe";
-string wildPath4 = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\*";
-string wildPath5 = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\*.exe";
-string wildPath6 = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.*";
-string wildPath7 = @"C:\Windows\Microsoft.NET\Framework*\v4*\InstallUtil.exe";
-string wildPath8 = @"C:\Windows\Microsoft.NET\*\v4.0.30319\InstallUtil.exe";
-string wildPath9 = @"C:\Windows\Microsoft.NET\*\v4.0.30319";
-string wildPath10 = @"C:\Windows\Microsoft.NET\*\v4*";
-string wildPath11 = @"C:\Windows\Microsoft.NET\*\";
-string wildPath12 = @"C:\Windows\Microsoft.NET\Framework*";
-
-
-bool ret = localCheck(wildPath11, true);
-
-Console.WriteLine(ret);
-
-
-
-bool localCheck(string path, bool isDirectory)
+bool init = true;
+if (init)
 {
-    if (path.Contains("*"))
+    Mapping mapping = new Mapping()
     {
-        string parentPath = Path.GetDirectoryName(path.TrimEnd('\\'));
-        Regex pattern = path.TrimEnd('\\').GetWildcardPattern();
-
-        var list = new List<string>();
-        Action<string> recurse = null;
-        recurse = (dirPath) =>
+        Require = new Require()
         {
-            if (!isDirectory)
+            RequireMode = "all",
+            RequireRule = new RequireRule[]
             {
-                foreach (string subFilePath in Directory.GetFiles(dirPath))
+                new RequireRule()
                 {
-                    if (pattern.IsMatch(subFilePath))
+                    RuleTarget = "HostName",
+                    MatchType = "Equal",
+                    Param = new Dictionary<string, string>()
                     {
-                        Console.WriteLine("[file]" + subFilePath);
-                        list.Add(subFilePath);
-                    }
-                }
+                        { "Name", "AAAA01" },
+                    },
+                },
+                new RequireRule()
+                {
+                    RuleTarget = "IPAddress",
+                    MatchType = "Equal",
+                    Param = new Dictionary<string, string>()
+                    {
+                        {"IPAddress", "192.168.10.100" },
+                    },
+                },
             }
-            foreach (string subDirPath in Directory.GetDirectories(dirPath))
+        },
+        Work = new Work()
+        {
+            Download = new Download[]
             {
-                if (isDirectory)
+                new Download()
                 {
-                    if (pattern.IsMatch(subDirPath))
-                    {
-                        Console.WriteLine("[directory]" + subDirPath);
-                        list.Add(subDirPath);
-                    }
-                }
-                if(dirPath != parentPath)
-                {
-                    recurse(subDirPath);
-                }
-            }
-        };
+                    Path = @"\\192.168.20.101\share1\Sample001.txt",
+                    Overwrite = "force",
+                },
+            },
+        }
+    };
+    mapping.Serialize("sample.yml");
 
-        string wildParent = Path.GetDirectoryName(path.Substring(0, path.IndexOf("*")));
-        recurse(wildParent);
 
-        return list.Count > 0;
-    }
-    return File.Exists(path);
+
+    Console.ReadLine();
+    Environment.Exit(0);
 }
+
+
+
+
 
 
 

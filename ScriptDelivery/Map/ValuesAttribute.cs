@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace ScriptDelivery.Map
 {
@@ -21,6 +22,20 @@ namespace ScriptDelivery.Map
             return _map[_keyword];     //  例外対策は無し。もし例外が発生した場合はコード見直し
         }
 
+        public static T GetEnumValue<T>(PropertyInfo prop, string val) where T : struct
+        {
+            var valuesAttr = prop.GetCustomAttribute<ValuesAttribute>();
+            foreach (SubCandidate candidate in valuesAttr.GetCandidate())
+            {
+                string enumText = candidate.Check(val);
+                if (enumText != null)
+                {
+                    return Enum.Parse<T>(enumText, true);
+                }
+            }
+            return default(T);
+        }
+
         #region Value candidate map
 
         private static Dictionary<string, SubCandidate[]> _map = null;
@@ -36,6 +51,16 @@ namespace ScriptDelivery.Map
                         new SubCandidate("or", "any") }
                 },
                 {
+                    "Target", new SubCandidate[]{
+                        new SubCandidate("none", "no"),
+                        new SubCandidate("hostname", "computername", "host"),
+                        new SubCandidate("ipaddress", "address", "ip", "ipaddr", "addr"),
+                        new SubCandidate("env", "environment"),
+                        new SubCandidate("exists", "exist"),
+                        new SubCandidate("registry", "reg"),
+                    }
+                },
+                {
                     "Match", new SubCandidate[]{
                         new SubCandidate("none", "no"),
                         new SubCandidate("equal", "equals"),
@@ -45,6 +70,15 @@ namespace ScriptDelivery.Map
                         new SubCandidate("file", "files"),
                         new SubCandidate("directory", "folder", "directories", "folders"),
                         new SubCandidate("registry", "reg", "registories") }
+                },
+                {
+                    "Overwrite", new SubCandidate[]
+                    {
+                        new SubCandidate("none", "no"),
+                        new SubCandidate("force", "forse"),
+                        new SubCandidate("mirror", "mirr", "mir"),
+                        new SubCandidate("merge", "mrg"),
+                    }
                 },
                 {
                     "Location", new SubCandidate[]{

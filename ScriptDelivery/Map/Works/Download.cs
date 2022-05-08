@@ -22,7 +22,17 @@ namespace ScriptDelivery.Map.Works
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
 
-        //  Overwriteの値を候補から取り出す処理をここに
+        [YamlIgnore]
+        public Overwrite enum_Overwrite
+        {
+            get
+            {
+                _enum_Overwrite ??= ValuesAttribute.GetEnumValue<Overwrite>(
+                    this.GetType().GetProperty("Overwrite"), this.Overwrite);
+                return (Overwrite)_enum_Overwrite;
+            }
+        }
+        private Overwrite? _enum_Overwrite;
 
         public void GetFile()
         {

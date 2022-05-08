@@ -8,9 +8,9 @@ namespace ScriptDelivery.Map.Works
 {
     internal enum Overwrite
     {
-        None,
-        Force,
-        Mirror,
-        Merge
+        None = 0,
+        Force = 1,
+        Mirror = 2,
+        Merge = 3,
     }
 }

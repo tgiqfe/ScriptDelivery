@@ -22,5 +22,7 @@ namespace ScriptDelivery.Map
             return this.Candidate.Any(x => x.Equals(x, StringComparison.OrdinalIgnoreCase)) ?
                 Name : null;
         }
+
+
     }
 }

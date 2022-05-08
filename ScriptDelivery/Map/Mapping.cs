@@ -8,9 +8,8 @@ using ScriptDelivery.Map.Requires;
 using YamlDotNet;
 using YamlDotNet.Serialization;
 using YamlDotNet.RepresentationModel;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using ScriptDelivery.Lib;
+using Csv;
 
 namespace ScriptDelivery.Map
 {
@@ -19,6 +18,9 @@ namespace ScriptDelivery.Map
         public Require Require { get; set; }
 
         public Work Work { get; set; }
+
+
+
 
         #region Deserialize
 
@@ -34,7 +36,6 @@ namespace ScriptDelivery.Map
                     {
                         ".yml" => DeserializeYaml(sr),
                         ".yaml" => DeserializeYaml(sr),
-                        ".json" => DeserializeJson(sr),
                         ".csv" => null,
                         ".txt" => null,
                         _ => null,
@@ -74,15 +75,64 @@ namespace ScriptDelivery.Map
             return list;
         }
 
-        public static List<Mapping> DeserializeJson(TextReader tr)
-        {
-            return JsonSerializer.Deserialize<List<Mapping>>(tr.ReadToEnd());
-        }
-
         #endregion
         #region Serialize
 
-        public void Serialize(string filePath, bool append = false)
+        public static void Serialize(List<Mapping> list, string filePath)
+        {
+            using (var sw = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                string extention = Path.GetExtension(filePath);
+                switch (extention)
+                {
+                    case ".yml":
+                    case ".yaml":
+                        SerializeYml(list, sw);
+                        break;
+                    case ".csv":
+                        SerializeCsv(list, sw);
+                        break;
+                    case ".txt":
+                        break;
+                }
+            }
+        }
+
+        private static void SerializeYml(List<Mapping> list, TextWriter tw)
+        {
+            _serializer ??= new SerializerBuilder().
+                WithEmissionPhaseObjectGraphVisitor(x =>
+                    new YamlIEnumerableSkipEmptyObjectGraphVisitor(x.InnerVisitor)).
+                    Build();
+            list.ForEach(x =>
+            {
+                tw.WriteLine("---");
+                tw.WriteLine(_serializer.Serialize(x));
+            });
+        }
+
+        private static void SerializeCsv(List<Mapping> list, TextWriter tw)
+        {
+            _csvHeader ??= new string[]
+            {
+                "Mode",
+                "Target",
+                "Match",
+                "Invert",
+                "Param",
+                "Path",
+                "Overwrite",
+                "User",
+                "Password",
+            };
+            CsvWriter.Write(tw, _csvHeader, list.Select(x => x.GetParamArray()));
+        }
+
+
+
+
+
+        public void Serialize(string filePath, bool append = true)
         {
             using (var sw = new StreamWriter(filePath, append, Encoding.UTF8))
             {
@@ -92,9 +142,6 @@ namespace ScriptDelivery.Map
                     case ".yml":
                     case ".yaml":
                         SerializeYml(sw);
-                        break;
-                    case ".json":
-                        SerializeJson(sw);
                         break;
                     case ".csv":
                         break;
@@ -114,19 +161,52 @@ namespace ScriptDelivery.Map
             tw.WriteLine(serializer.Serialize(this));
         }
 
-        public void SerializeJson(TextWriter tw)
+        public void SerializeCsv(TextWriter tw)
         {
-            var options = new JsonSerializerOptions()
+            var lines = new string[][]
             {
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                IgnoreReadOnlyProperties = true,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-                WriteIndented = true,
-                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+                this.GetParamArray(),
             };
-            JsonSerializer.Serialize(tw, options);
+            CsvWriter.Write(tw, Mapping._csvHeader, lines, ',', true);
         }
 
         #endregion
+
+        private static ISerializer _serializer = null;
+
+        private static string[] _csvHeader = null;
+
+        private string[] GetParamArray()
+        {
+            //  ヘッダーの数を直接指定・・・
+            string[] array = new string[8];
+
+            array[0] = this.Require.enum_RequireMode.ToString();
+            if (this.Require.RequireRule?.Length > 0)
+            {
+                array[1] = Require.RequireRule[0].enum_RuleTarget.ToString();
+                array[2] = Require.RequireRule[0].enum_MatchType.ToString();
+                array[3] = Require.RequireRule[0].Invert?.ToString();
+                var sb = new StringBuilder();
+                foreach (var pair in Require.RequireRule[0].Param)
+                {
+                    sb.Append($"{pair.Key}={pair.Value}");
+                }
+                array[4] = sb.ToString();
+            }
+            if (this.Work.Download?.Length > 0)
+            {
+                array[5] = Work.Download[0].Path;
+                array[6] = Work.Download[0].enum_Overwrite.ToString();
+                array[7] = Work.Download[0].UserName;
+                array[8] = Work.Download[0].Password;
+            }
+
+            return array;
+        }
+
+
+
+
     }
 }
