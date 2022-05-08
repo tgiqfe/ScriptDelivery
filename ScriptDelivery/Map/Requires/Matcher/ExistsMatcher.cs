@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Lib;
 using System.IO;
+using Microsoft.Win32;
 
 namespace ScriptDelivery.Map.Requires.Matcher
 {
@@ -61,9 +62,11 @@ namespace ScriptDelivery.Map.Requires.Matcher
         /// <returns></returns>
         private bool RegistryMatch()
         {
-
-
-            return false;
+            if (this.Path.Contains("*") || this.Name.Contains("*"))
+            {
+                return SearchWildRegistry(Path, Name);
+            }
+            return RegistryControl.Exists(Path, Name);
         }
 
         #endregion
@@ -74,7 +77,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
         /// <param name="path"></param>
         /// <param name="isDirectory"></param>
         /// <returns></returns>
-        public bool SearchWildFile(string path, bool isDirectory)
+        private bool SearchWildFile(string path, bool isDirectory)
         {
             string parentPath = System.IO.Path.GetDirectoryName(path.TrimEnd('\\'));
             var pattern = path.TrimEnd('\\').GetWildcardPattern();
@@ -115,6 +118,88 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
             string wildParent = System.IO.Path.GetDirectoryName(path.Substring(0, path.IndexOf("*")));
             recurse(wildParent);
+
+            return list.Count > 0;
+        }
+
+        private bool SearchWildRegistry(string path, string name = null)
+        {
+            var list = new List<string>();
+            var keyPatten = path.Contains("*") ? path.GetWildcardPattern() : null;
+            var valPattern = (name?.Contains("*") ?? false) ? name.GetWildcardPattern() : null;
+
+            Action<RegistryKey> checkRegName = (targetRegkey) =>
+            {
+                var valNames = name.Contains("*") ?
+                    targetRegkey.GetValueNames().Where(x => valPattern.IsMatch(x)) :
+                    targetRegkey.GetValueNames().Where(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
+                foreach (string valName in valNames)
+                {
+                    string text = string.Format("Key={0} Name={1}", targetRegkey.ToString(), valName);
+                    Console.WriteLine(text);
+                    list.Add(text);
+                }
+            };
+
+            if (path.Contains("*"))
+            {
+                string parentPath = System.IO.Path.GetDirectoryName(path.TrimEnd('\\'));
+
+                Action<RegistryKey> recurse = null;
+                recurse = (regKey) =>
+                {
+                    if (name != null)
+                    {
+                        checkRegName(regKey);
+                    }
+
+                    string regKeyStr = regKey.ToString();
+                    foreach (var subKeyName in regKey.GetSubKeyNames())
+                    {
+                        using (var subRegKey = regKey.OpenSubKey(subKeyName))
+                        {
+                            if (name == null)
+                            {
+                                if (keyPatten.IsMatch(subRegKey.ToString()))
+                                {
+                                    string text = string.Format("Key={0}", subRegKey.ToString());
+                                    Console.WriteLine(text);
+                                    list.Add(text);
+                                }
+                            }
+
+                            if (regKeyStr != parentPath)
+                            {
+                                recurse(subRegKey);
+                            }
+                        }
+                    }
+                };
+
+                string wildParent = System.IO.Path.GetDirectoryName(path.Substring(0, path.IndexOf("*")));
+                using (var parentRegKey = RegistryControl.GetRegistryKey(wildParent, false, false))
+                {
+                    recurse(parentRegKey);
+                }
+            }
+            else
+            {
+                using (var regKey = RegistryControl.GetRegistryKey(path, false, false))
+                {
+                    if (regKey == null) { return false; }
+
+                    if (name == null)
+                    {
+                        string text = string.Format("Key={0}", regKey.ToString());
+                        Console.WriteLine(text);
+                        list.Add(text);
+                    }
+                    else
+                    {
+                        checkRegName(regKey);
+                    }
+                }
+            }
 
             return list.Count > 0;
         }
