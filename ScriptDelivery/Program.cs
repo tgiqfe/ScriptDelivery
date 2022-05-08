@@ -47,7 +47,14 @@ if (init)
             },
         }
     };
-    mapping.Serialize("sample.yml");
+
+    List<Mapping> list = new List<Mapping>()
+    {
+        mapping
+    };
+
+    Mapping.Serialize(list, "sample.csv");
+
 
 
 

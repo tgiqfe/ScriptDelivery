@@ -26,11 +26,6 @@ namespace ScriptDelivery.Map.Requires
                 return (RequireMode)_enum_RequireMode;
             }
         }
-        private RequireMode? _enum_RequireMode;
-
-
-
-
-
+        private RequireMode? _enum_RequireMode = null;
     }
 }

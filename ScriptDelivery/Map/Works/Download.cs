@@ -13,7 +13,7 @@ namespace ScriptDelivery.Map.Works
         [YamlMember(Alias = "path")]
         public string Path { get; set; }
 
-        [YamlMember(Alias = "overwrite")]
+        [YamlMember(Alias = "overwrite"), Values("Overwrite")]
         public string Overwrite { get; set; }
 
         [YamlMember(Alias = "user")]
@@ -32,11 +32,6 @@ namespace ScriptDelivery.Map.Works
                 return (Overwrite)_enum_Overwrite;
             }
         }
-        private Overwrite? _enum_Overwrite;
-
-        public void GetFile()
-        {
-
-        }
+        private Overwrite? _enum_Overwrite = null;
     }
 }

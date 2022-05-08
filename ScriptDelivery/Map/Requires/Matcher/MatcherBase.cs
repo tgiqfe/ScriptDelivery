@@ -80,7 +80,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
         {
             if (!string.IsNullOrEmpty(val))
             {
-                prop.SetValue(this, !BooleanCandidate.IsFalse(val));
+                prop.SetValue(this, !BooleanCandidate.IsNullableFalse(val));
             }
         }
 

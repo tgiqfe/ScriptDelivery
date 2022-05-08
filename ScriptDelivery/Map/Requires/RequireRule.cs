@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet;
 using YamlDotNet.Serialization;
+using ScriptDelivery.Lib;
 
 namespace ScriptDelivery.Map.Requires
 {
@@ -17,14 +18,10 @@ namespace ScriptDelivery.Map.Requires
         public string MatchType { get; set; }
 
         [YamlMember(Alias = "invert")]
-        public bool? Invert { get; set; }
+        public string Invert { get; set; }
 
         [YamlMember(Alias = "param")]
         public Dictionary<string, string> Param { get; set; }
-
-        //  RuleTargetの値を候補から取り出す処理をここに
-        //  MatchTypeの値を候補から取り出す処理をここに
-
 
         [YamlIgnore]
         public RuleTarget enum_RuleTarget
@@ -36,7 +33,7 @@ namespace ScriptDelivery.Map.Requires
                 return (RuleTarget)_enum_RuleTarget;
             }
         }
-        private RuleTarget? _enum_RuleTarget;
+        private RuleTarget? _enum_RuleTarget = null;
 
         [YamlIgnore]
         public MatchType enum_MatchType
@@ -48,15 +45,18 @@ namespace ScriptDelivery.Map.Requires
                 return (MatchType)_enum_MatchType;
             }
         }
-        private MatchType? _enum_MatchType;
+        private MatchType? _enum_MatchType = null;
 
-
-
-        public bool Match()
+        [YamlIgnore]
+        public bool bool_Invert
         {
-
-
-            return false;
+            get
+            {
+                _bool_Invert ??= !(BooleanCandidate.IsNullableFalse(this.Invert) ?? false);
+                return (bool)_bool_Invert;
+            }
         }
+        private bool? _bool_Invert = null;
+
     }
 }
