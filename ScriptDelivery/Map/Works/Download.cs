@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization;
+using System.Diagnostics;
 
 namespace ScriptDelivery.Map.Works
 {
@@ -20,5 +21,10 @@ namespace ScriptDelivery.Map.Works
 
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
+
+        public void GetFile()
+        {
+
+        }
     }
 }

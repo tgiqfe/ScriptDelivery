@@ -13,5 +13,7 @@ namespace ScriptDelivery.Map
         public Require Require { get; set; }
 
         public Work Work { get; set; }
+
+
     }
 }
