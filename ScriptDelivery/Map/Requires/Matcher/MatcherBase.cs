@@ -141,5 +141,12 @@ namespace ScriptDelivery.Map.Requires.Matcher
         }
 
         #endregion
+
+        public void CheckParam()
+        {
+            //  パラメータの有無チェック
+        }
+
+        public virtual bool IsMatch(MatchType matchType) { return false; }
     }
 }

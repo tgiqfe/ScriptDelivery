@@ -53,7 +53,18 @@ namespace ScriptDelivery.Map
                         new SubCandidate("user"),
                         new SubCandidate("machine", "computer"),
                     }
-                }
+                },
+                {
+                    "RegistryType", new SubCandidate[]{
+                        new SubCandidate("reg_sz", "string"),
+                        new SubCandidate("reg_dword", "dword", "int", "int32"),
+                        new SubCandidate("reg_qword", "qword", "long", "int64"),
+                        new SubCandidate("reg_multi_sz", "multistring", "strings", "stringarray", "array"),
+                        new SubCandidate("reg_expand_sz", "expandstring", "expand_string"),
+                        new SubCandidate("reg_binary", "binary", "bin"),
+                        new SubCandidate("reg_none", "none", "non", "no"),
+                    }
+                },
             };
         }
 

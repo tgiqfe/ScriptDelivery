@@ -17,7 +17,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
     /// </summary>
     internal class IPAddressMatcher : MatcherBase
     {
-        [MatcherParameter, Keys("IPAddress")]
+        [MatcherParameter(Mandatory = true), Keys("IPAddress")]
         public string IPAddress { get; set; }
 
         [MatcherParameter, Keys("NetworkAddress")]
@@ -34,7 +34,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
         private static NetworkInfo _info = null;
 
-        public bool IsMatch(MatchType matchType)
+        public override bool IsMatch(MatchType matchType)
         {
             _info ??= new NetworkInfo();
 

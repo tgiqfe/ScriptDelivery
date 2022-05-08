@@ -13,7 +13,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
     /// </summary>
     internal class EnvMatcher : MatcherBase
     {
-        [MatcherParameter, Keys("Name", "Key")]
+        [MatcherParameter(Mandatory = true), Keys("Name", "Key")]
         public string Name { get; set; }
 
         [MatcherParameter, Keys("Value")]
@@ -30,7 +30,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
             Machine = 3
         }
 
-        public bool IsMatch(MatchType matchType)
+        public override bool IsMatch(MatchType matchType)
         {
             this.Location ??= EnvLocation.All;
 

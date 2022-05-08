@@ -8,6 +8,10 @@ namespace ScriptDelivery.Map.Requires.Matcher
 {
     internal class MatcherParameterAttribute : Attribute
     {
+        public bool Mandatory { get; set; }
+
+        public int MandatoryAny { get; set; }
+
         public bool Unsigned { get; set; }
 
         public char Delimiter { get; set; }

@@ -19,9 +19,6 @@ namespace ScriptDelivery.Map.Requires
         [YamlMember(Alias = "invert")]
         public bool? Invert { get; set; }
 
-        [YamlMember(Alias = "caseSensitive")]
-        public bool? CaseSensitive { get; set; }
-
         [YamlMember(Alias = "param")]
         public Dictionary<string, string> Param { get; set; }
 

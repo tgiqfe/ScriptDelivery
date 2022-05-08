@@ -16,7 +16,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
     /// </summary>
     internal class HostNameMatcher : MatcherBase
     {
-        [MatcherParameter, Keys("Name")]
+        [MatcherParameter(Mandatory = true), Keys("Name")]
         public string Name { get; set; }
 
         [MatcherParameter, Keys("Start")]
@@ -25,7 +25,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
         [MatcherParameter, Keys("End")]
         public string EndName { get; set; }
 
-        public bool IsMatch(MatchType matchType)
+        public override bool IsMatch(MatchType matchType)
         {
             return matchType switch
             {

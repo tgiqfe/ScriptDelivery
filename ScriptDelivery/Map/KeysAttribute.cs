@@ -44,6 +44,7 @@ namespace ScriptDelivery.Map
                 { "RegistryName", new string[]{ "registryname", "regname", "parametername", "registryparameter", "registryparam", "regparameter", "regparam"} },
                 { "RegistryValue", new string[]{ "registryvalue", "regvalue", "regval" } },
                 { "RegistryType", new string[]{ "registrytype", "regtype", "type" } },
+                { "NoExpand", new string[]{ "noexpand", "notexpand", "expandno", "expandnot" } },
             };
         }
 

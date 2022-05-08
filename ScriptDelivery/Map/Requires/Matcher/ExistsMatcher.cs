@@ -11,13 +11,13 @@ namespace ScriptDelivery.Map.Requires.Matcher
 {
     internal class ExistsMatcher : MatcherBase
     {
-        [MatcherParameter, Keys("Path", "RegistryKey")]
+        [MatcherParameter(Mandatory = true), Keys("Path", "RegistryKey")]
         public string Path { get; set; }
 
         [MatcherParameter, Keys("Name", "RegistryName")]
         public string Name { get; set; }
 
-        public bool IsMatch(MatchType matchType)
+        public override bool IsMatch(MatchType matchType)
         {
             return matchType switch
             {
@@ -70,6 +70,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
         }
 
         #endregion
+        #region Search method
 
         /// <summary>
         /// ワイルドカードを含むパスからファイル/ディレクトリの有無チェック
@@ -122,6 +123,12 @@ namespace ScriptDelivery.Map.Requires.Matcher
             return list.Count > 0;
         }
 
+        /// <summary>
+        /// ワイルドカードを含むレジストリキー/レジストリ名から有無チェック
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private bool SearchWildRegistry(string path, string name = null)
         {
             var list = new List<string>();
@@ -203,5 +210,7 @@ namespace ScriptDelivery.Map.Requires.Matcher
 
             return list.Count > 0;
         }
+
+        #endregion
     }
 }
