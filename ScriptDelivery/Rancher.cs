@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Requires;
 using ScriptDelivery.Requires.Matcher;
+using ScriptDelivery.Works;
 
 namespace ScriptDelivery
 {
@@ -26,8 +27,10 @@ namespace ScriptDelivery
                 RequireMode mode = mapping.Require.GetRequireMode();
 
                 bool ret = TestRequire(mapping.Require.RequireRules, mode);
-
-
+                if (ret)
+                {
+                    ProcessWork(mapping.Work.Downloads);
+                }
             }
         }
 
@@ -40,17 +43,26 @@ namespace ScriptDelivery
             }
             var results = rules.ToList().Select(x =>
             {
-                MatcherBase matcher = MatcherBase.Get(x);
+                MatcherBase matcher = MatcherBase.Get(x.GetRuleTarget());
                 matcher.SetParam(x.Param);
                 return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
             });
 
             return mode switch
             {
-                RequireMode.And => results.All(),
-                RequireMode.Or => results.Any(),
+                RequireMode.And => results.All(x => x),
+                RequireMode.Or => results.Any(x => x),
                 _ => false,
             };
+        }
+
+        private void ProcessWork(Download[] downloads)
+        {
+
+
+            //  ここにダウンロード処理を開始させていく記述を
+
+
         }
     }
 }
