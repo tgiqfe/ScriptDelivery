@@ -16,16 +16,10 @@ namespace ScriptDelivery.Requires
         [YamlMember(Alias = "rule")]
         public RequireRule[] RequireRule { get; set; }
 
-        [YamlIgnore]
-        public RequireMode enum_RequireMode
+        public RequireMode GetRequireMode()
         {
-            get
-            {
-                _enum_RequireMode ??= ValuesAttribute.GetEnumValue<RequireMode>(
-                    this.GetType().GetProperty("RequireMode"), this.RequireMode);
-                return (RequireMode)_enum_RequireMode;
-            }
+            return ValuesAttribute.GetEnumValue<RequireMode>(
+                this.GetType().GetProperty("RequireMode"), this.RequireMode);
         }
-        private RequireMode? _enum_RequireMode = null;
     }
 }

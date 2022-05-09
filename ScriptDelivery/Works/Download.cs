@@ -22,16 +22,10 @@ namespace ScriptDelivery.Works
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
 
-        [YamlIgnore]
-        public Overwrite enum_Overwrite
+        public Overwrite GetOverwrite()
         {
-            get
-            {
-                _enum_Overwrite ??= ValuesAttribute.GetEnumValue<Overwrite>(
-                    this.GetType().GetProperty("Overwrite"), this.Overwrite);
-                return (Overwrite)_enum_Overwrite;
-            }
+            return ValuesAttribute.GetEnumValue<Overwrite>(
+                this.GetType().GetProperty("Overwrite"), this.Overwrite);
         }
-        private Overwrite? _enum_Overwrite = null;
     }
 }

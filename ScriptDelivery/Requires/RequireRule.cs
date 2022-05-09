@@ -23,40 +23,22 @@ namespace ScriptDelivery.Requires
         [YamlMember(Alias = "param")]
         public Dictionary<string, string> Param { get; set; }
 
-        [YamlIgnore]
-        public RuleTarget enum_RuleTarget
+        
+        public RuleTarget GetRuleTarget()
         {
-            get
-            {
-                _enum_RuleTarget ??= ValuesAttribute.GetEnumValue<RuleTarget>(
-                    this.GetType().GetProperty("RuleTarget"), this.RuleTarget);
-                return (RuleTarget)_enum_RuleTarget;
-            }
+            return ValuesAttribute.GetEnumValue<RuleTarget>(
+                this.GetType().GetProperty("RuleTarget"), this.RuleTarget);
         }
-        private RuleTarget? _enum_RuleTarget = null;
 
-        [YamlIgnore]
-        public MatchType enum_MatchType
+        public MatchType GetMatchType()
         {
-            get
-            {
-                _enum_MatchType ??= ValuesAttribute.GetEnumValue<MatchType>(
-                    this.GetType().GetProperty("MatchType"), this.MatchType);
-                return (MatchType)_enum_MatchType;
-            }
+            return ValuesAttribute.GetEnumValue<MatchType>(
+                this.GetType().GetProperty("MatchType"), this.MatchType);
         }
-        private MatchType? _enum_MatchType = null;
 
-        [YamlIgnore]
-        public bool bool_Invert
+        public bool GetInvert()
         {
-            get
-            {
-                _bool_Invert ??= !(BooleanCandidate.IsNullableFalse(this.Invert) ?? false);
-                return (bool)_bool_Invert;
-            }
+            return !(BooleanCandidate.IsNullableFalse(this.Invert) ?? false);
         }
-        private bool? _bool_Invert = null;
-
     }
 }
