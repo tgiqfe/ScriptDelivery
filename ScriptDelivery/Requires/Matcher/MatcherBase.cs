@@ -10,6 +10,19 @@ namespace ScriptDelivery.Requires.Matcher
 {
     internal class MatcherBase
     {
+        public static MatcherBase Get(RuleTarget target)
+        {
+            return target switch
+            {
+                RuleTarget.None => null,
+                RuleTarget.HostName => new HostNameMatcher(),
+                RuleTarget.IPAddress => new IPAddressMatcher(),
+                RuleTarget.Env => new EnvMatcher(),
+                RuleTarget.Exists => new ExistsMatcher(),
+                RuleTarget.Registy => new RegistryMatcher(),
+                _ => null,
+            };
+        }
 
         /// <summary>
         /// 文字列情報から各パラメータをセット
@@ -76,7 +89,7 @@ namespace ScriptDelivery.Requires.Matcher
             prop.SetValue(this, val);
         }
 
-        public void SetBool(PropertyInfo prop, string val)
+        private void SetBool(PropertyInfo prop, string val)
         {
             if (!string.IsNullOrEmpty(val))
             {
@@ -84,7 +97,7 @@ namespace ScriptDelivery.Requires.Matcher
             }
         }
 
-        public void SetInt(PropertyInfo prop, string val, bool unsigned)
+        private void SetInt(PropertyInfo prop, string val, bool unsigned)
         {
             if (int.TryParse(val, out int tempInt))
             {
@@ -95,12 +108,12 @@ namespace ScriptDelivery.Requires.Matcher
             }
         }
 
-        public void SetDateTime(PropertyInfo prop, string val)
+        private void SetDateTime(PropertyInfo prop, string val)
         {
             prop.SetValue(this, DateTime.TryParse(val, out DateTime dt) ? dt : null);
         }
 
-        public void SetStrings(PropertyInfo prop, string val, char pDelimiter, bool expand)
+        private void SetStrings(PropertyInfo prop, string val, char pDelimiter, bool expand)
         {
             char delimiter = val.Contains(pDelimiter) ? pDelimiter : '\n';
             string[] array = val.Split(delimiter).
@@ -110,7 +123,7 @@ namespace ScriptDelivery.Requires.Matcher
             prop.SetValue(this, array);
         }
 
-        public void SetDictionary(PropertyInfo prop, string val, char pDelimiter, char equalSign, bool expand)
+        private void SetDictionary(PropertyInfo prop, string val, char pDelimiter, char equalSign, bool expand)
         {
             var dictionary = new Dictionary<string, string>();
 
@@ -129,7 +142,7 @@ namespace ScriptDelivery.Requires.Matcher
             prop.SetValue(this, dictionary);
         }
 
-        public void SetEnum(PropertyInfo prop, string val, Type type)
+        private void SetEnum(PropertyInfo prop, string val, Type type)
         {
             var values = prop.GetCustomAttribute<ValuesAttribute>();
             if (values != null)

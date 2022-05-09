@@ -10,6 +10,6 @@ namespace ScriptDelivery.Works
     internal class Work
     {
         [YamlMember(Alias = "download")]
-        public Download[] Download { get; set; }
+        public Download[] Downloads { get; set; }
     }
 }

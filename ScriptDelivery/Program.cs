@@ -13,7 +13,7 @@ if (init)
         Require = new Require()
         {
             RequireMode = "all",
-            RequireRule = new RequireRule[]
+            RequireRules = new RequireRule[]
             {
                 new RequireRule()
                 {
@@ -37,7 +37,7 @@ if (init)
         },
         Work = new Work()
         {
-            Download = new Download[]
+            Downloads = new Download[]
             {
                 new Download()
                 {

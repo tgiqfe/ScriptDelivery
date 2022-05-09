@@ -14,7 +14,7 @@ namespace ScriptDelivery.Requires
         public string RequireMode { get; set; }
 
         [YamlMember(Alias = "rule")]
-        public RequireRule[] RequireRule { get; set; }
+        public RequireRule[] RequireRules { get; set; }
 
         public RequireMode GetRequireMode()
         {

@@ -137,10 +137,10 @@ namespace ScriptDelivery
                 mapping.Require = new Require();
                 mapping.Require.RequireMode = line["Mode"];
 
-                mapping.Require.RequireRule = new RequireRule[1];
-                mapping.Require.RequireRule[0].RuleTarget = line["Target"];
-                mapping.Require.RequireRule[0].MatchType = line["Match"];
-                mapping.Require.RequireRule[0].Invert = line["Invert"];
+                mapping.Require.RequireRules = new RequireRule[1];
+                mapping.Require.RequireRules[0].RuleTarget = line["Target"];
+                mapping.Require.RequireRules[0].MatchType = line["Match"];
+                mapping.Require.RequireRules[0].Invert = line["Invert"];
 
                 var dictionary = new Dictionary<string, string>();
                 separator.Split(line["Param"]).
@@ -150,14 +150,14 @@ namespace ScriptDelivery
                         string[] fields = x.Split('=');
                         dictionary[fields[0]] = fields[1];
                     });
-                mapping.Require.RequireRule[0].Param = dictionary;
+                mapping.Require.RequireRules[0].Param = dictionary;
 
                 mapping.Work = new Work();
-                mapping.Work.Download = new Download[1];
-                mapping.Work.Download[0].Path = line["Path"];
-                mapping.Work.Download[0].Overwrite = line["Overwrite"];
-                mapping.Work.Download[0].UserName = line["UserName"];
-                mapping.Work.Download[0].Password = line["Password"];
+                mapping.Work.Downloads = new Download[1];
+                mapping.Work.Downloads[0].Path = line["Path"];
+                mapping.Work.Downloads[0].Overwrite = line["Overwrite"];
+                mapping.Work.Downloads[0].UserName = line["UserName"];
+                mapping.Work.Downloads[0].Password = line["Password"];
 
                 list.Add(mapping);
             }
@@ -191,25 +191,25 @@ namespace ScriptDelivery
             //  ヘッダーの数を直接指定・・・
             string[] array = new string[9];
 
-            array[0] = this.Require.enum_RequireMode.ToString();
-            if (this.Require.RequireRule?.Length > 0)
+            array[0] = this.Require.GetRequireMode().ToString();
+            if (this.Require.RequireRules?.Length > 0)
             {
-                array[1] = Require.RequireRule[0].enum_RuleTarget.ToString();
-                array[2] = Require.RequireRule[0].enum_MatchType.ToString();
-                array[3] = Require.RequireRule[0].bool_Invert.ToString();
+                array[1] = Require.RequireRules[0].GetRuleTarget().ToString();
+                array[2] = Require.RequireRules[0].GetMatchType().ToString();
+                array[3] = Require.RequireRules[0].GetInvert().ToString();
                 var tempList = new List<string>();
-                foreach (var pair in Require.RequireRule[0].Param)
+                foreach (var pair in Require.RequireRules[0].Param)
                 {
                     tempList.Add($"{pair.Key}={pair.Value}");
                 }
                 array[4] = string.Join(" ", tempList);
             }
-            if (this.Work.Download?.Length > 0)
+            if (this.Work.Downloads?.Length > 0)
             {
-                array[5] = Work.Download[0].Path ?? "";
-                array[6] = Work.Download[0].enum_Overwrite.ToString();
-                array[7] = Work.Download[0].UserName ?? "";
-                array[8] = Work.Download[0].Password ?? "";
+                array[5] = Work.Downloads[0].Path ?? "";
+                array[6] = Work.Downloads[0].GetOverwrite().ToString();
+                array[7] = Work.Downloads[0].UserName ?? "";
+                array[8] = Work.Downloads[0].Password ?? "";
             }
 
             return array;
