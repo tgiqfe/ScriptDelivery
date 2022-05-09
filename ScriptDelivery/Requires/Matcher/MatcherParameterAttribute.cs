@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     internal class MatcherParameterAttribute : Attribute
     {

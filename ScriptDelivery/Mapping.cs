@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ScriptDelivery.Map.Works;
-using ScriptDelivery.Map.Requires;
+using ScriptDelivery.Works;
+using ScriptDelivery.Requires;
 using YamlDotNet;
 using YamlDotNet.Serialization;
 using YamlDotNet.RepresentationModel;
 using ScriptDelivery.Lib;
 using Csv;
 
-namespace ScriptDelivery.Map
+namespace ScriptDelivery
 {
     internal class Mapping
     {

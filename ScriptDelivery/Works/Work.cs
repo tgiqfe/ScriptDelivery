@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 
-namespace ScriptDelivery.Map.Works
+namespace ScriptDelivery.Works
 {
     internal class Work
     {

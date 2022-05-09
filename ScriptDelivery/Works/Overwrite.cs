@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScriptDelivery.Map.Works
+namespace ScriptDelivery.Works
 {
     internal enum Overwrite
     {

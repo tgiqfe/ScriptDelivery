@@ -1,5 +1,5 @@
 ﻿
-namespace ScriptDelivery.Map.Requires
+namespace ScriptDelivery.Requires
 {
     internal enum RequireMode
     {

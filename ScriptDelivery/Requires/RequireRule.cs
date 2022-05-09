@@ -7,7 +7,7 @@ using YamlDotNet;
 using YamlDotNet.Serialization;
 using ScriptDelivery.Lib;
 
-namespace ScriptDelivery.Map.Requires
+namespace ScriptDelivery.Requires
 {
     internal class RequireRule
     {

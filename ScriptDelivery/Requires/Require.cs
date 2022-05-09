@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 using System.Reflection;
 
-namespace ScriptDelivery.Map.Requires
+namespace ScriptDelivery.Requires
 {
     internal class Require
     {

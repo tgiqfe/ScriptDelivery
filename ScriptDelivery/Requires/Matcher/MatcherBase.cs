@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using ScriptDelivery.Lib;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     internal class MatcherBase
     {

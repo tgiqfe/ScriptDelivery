@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ScriptDelivery.Lib;
 using Microsoft.Win32;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     /// <summary>
     /// レジストリのマッチ確認

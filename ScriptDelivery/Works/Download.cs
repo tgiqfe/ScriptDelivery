@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 using System.Diagnostics;
 
-namespace ScriptDelivery.Map.Works
+namespace ScriptDelivery.Works
 {
     internal class Download
     {

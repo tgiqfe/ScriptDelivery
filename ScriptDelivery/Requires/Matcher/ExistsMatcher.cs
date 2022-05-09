@@ -7,7 +7,7 @@ using ScriptDelivery.Lib;
 using System.IO;
 using Microsoft.Win32;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     internal class ExistsMatcher : MatcherBase
     {

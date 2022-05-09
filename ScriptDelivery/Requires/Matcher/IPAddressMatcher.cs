@@ -7,7 +7,7 @@ using ScriptDelivery.Lib;
 using System.Net.Sockets;
 using System.Net;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     /// <summary>
     /// IPアドレスのマッチ確認

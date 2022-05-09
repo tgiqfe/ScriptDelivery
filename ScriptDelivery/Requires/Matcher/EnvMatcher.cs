@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Lib;
 
-namespace ScriptDelivery.Map.Requires.Matcher
+namespace ScriptDelivery.Requires.Matcher
 {
     /// <summary>
     /// 環境変数のマッチ確認

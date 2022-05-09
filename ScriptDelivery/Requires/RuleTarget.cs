@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScriptDelivery.Map.Requires
+namespace ScriptDelivery.Requires
 {
     internal enum RuleTarget
     {

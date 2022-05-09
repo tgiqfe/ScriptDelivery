@@ -1,9 +1,9 @@
 ﻿using ScriptDelivery.Lib;
 using System.IO;
 using System.Text.RegularExpressions;
-using ScriptDelivery.Map;
-using ScriptDelivery.Map.Requires;
-using ScriptDelivery.Map.Works;
+using ScriptDelivery.Requires;
+using ScriptDelivery.Works;
+using ScriptDelivery;
 
 bool init = true;
 if (init)
