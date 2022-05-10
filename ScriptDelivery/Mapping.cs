@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Works;
 using ScriptDelivery.Requires;
-using YamlDotNet;
 using YamlDotNet.Serialization;
 using YamlDotNet.RepresentationModel;
 using ScriptDelivery.Lib;

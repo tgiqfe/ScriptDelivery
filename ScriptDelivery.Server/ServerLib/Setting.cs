@@ -2,17 +2,35 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace ScriptDelivery.Server.ServerLib
 {
     public class Setting
     {
-        public string FilesStore { get; set; }
+        public string MapsPath { get; set; }
+        public string FilesPath { get; set; }
 
         public void Init()
         {
-            this.FilesStore = "store";
+            this.MapsPath = "store/maps";
+            this.FilesPath = "store/files";
         }
+
+        public void ChangePath()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                this.MapsPath = MapsPath.Replace("/", "\\");
+                this.FilesPath = FilesPath.Replace("/", "\\");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                this.MapsPath = MapsPath.Replace("\\", "/");
+                this.FilesPath = FilesPath.Replace("\\", "/");
+            }
+        }
+
 
         #region Serialize/Deserialize
 
