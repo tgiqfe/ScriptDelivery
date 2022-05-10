@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ScriptDelivery\KeysAttribute.cs" Link="ScriptDelivery\KeysAttribute.cs" />
+    <Compile Include="..\ScriptDelivery\Mapping.cs" Link="ScriptDelivery\Mapping.cs" />
+    <Compile Include="..\ScriptDelivery\Requires\MatchType.cs" Link="ScriptDelivery\Requires\MatchType.cs" />
+    <Compile Include="..\ScriptDelivery\Requires\Require.cs" Link="ScriptDelivery\Requires\Require.cs" />
+    <Compile Include="..\ScriptDelivery\Requires\RequireMode.cs" Link="ScriptDelivery\Requires\RequireMode.cs" />
+    <Compile Include="..\ScriptDelivery\Requires\RequireRule.cs" Link="ScriptDelivery\Requires\RequireRule.cs" />
+    <Compile Include="..\ScriptDelivery\Requires\RuleTarget.cs" Link="ScriptDelivery\Requires\RuleTarget.cs" />
+    <Compile Include="..\ScriptDelivery\SubCandidate.cs" Link="ScriptDelivery\SubCandidate.cs" />
+    <Compile Include="..\ScriptDelivery\ValuesAttribute.cs" Link="ScriptDelivery\ValuesAttribute.cs" />
+    <Compile Include="..\ScriptDelivery\Works\Download.cs" Link="ScriptDelivery\Works\Download.cs" />
+    <Compile Include="..\ScriptDelivery\Works\Overwrite.cs" Link="ScriptDelivery\Works\Overwrite.cs" />
+    <Compile Include="..\ScriptDelivery\Works\Work.cs" Link="ScriptDelivery\Works\Work.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ScriptDelivery\Requires\" />
+    <Folder Include="ScriptDelivery\Works\" />
+    <Folder Include="nginx_conf\conf.d\" />
+    <Folder Include="ScriptDelivery\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Csv" Version="2.0.84" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
+</Project>
