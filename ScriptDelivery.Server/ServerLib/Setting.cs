@@ -19,15 +19,17 @@ namespace ScriptDelivery.Server.ServerLib
 
         public void ChangePath()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            switch (Item.Platform)
             {
-                this.MapsPath = MapsPath.Replace("/", "\\");
-                this.FilesPath = FilesPath.Replace("/", "\\");
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                this.MapsPath = MapsPath.Replace("\\", "/");
-                this.FilesPath = FilesPath.Replace("\\", "/");
+                case Platform.Windows:
+                    this.MapsPath = MapsPath.Replace("/", "\\");
+                    this.FilesPath = FilesPath.Replace("/", "\\");
+                    break;
+                case Platform.Linux:
+                case Platform.MacOSX:
+                    this.MapsPath = MapsPath.Replace("\\", "/");
+                    this.FilesPath = FilesPath.Replace("\\", "/");
+                    break;
             }
         }
 
