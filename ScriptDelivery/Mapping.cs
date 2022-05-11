@@ -161,7 +161,7 @@ namespace ScriptDelivery
 
                 mapping.Work = new Work();
                 mapping.Work.Downloads = new Download[1] { new Download() };
-                mapping.Work.Downloads[0].Path = line["Path"];
+                mapping.Work.Downloads[0].SourcePath = line["Path"];
                 mapping.Work.Downloads[0].Protocol = line["Protocol"];
                 mapping.Work.Downloads[0].Force = line["Force"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];
@@ -181,7 +181,8 @@ namespace ScriptDelivery
                 "Match",
                 "Invert",
                 "Param",
-                "Path",
+                "Source",
+                "Destination",
                 "Protocol",
                 "Force",
                 "UserName",
@@ -214,11 +215,12 @@ namespace ScriptDelivery
             }
             if (this.Work.Downloads?.Length > 0)
             {
-                array[5] = Work.Downloads[0].Path ?? "";
-                array[6] = Work.Downloads[0].GetProtocol().ToString();
-                array[7] = Work.Downloads[0].GetForce().ToString();
-                array[8] = Work.Downloads[0].UserName ?? "";
-                array[9] = Work.Downloads[0].Password ?? "";
+                array[5] = Work.Downloads[0].SourcePath ?? "";
+                array[6] = Work.Downloads[0].DestinationPath ?? "";
+                array[7] = Work.Downloads[0].GetProtocol().ToString();
+                array[8] = Work.Downloads[0].GetForce().ToString();
+                array[9] = Work.Downloads[0].UserName ?? "";
+                array[10] = Work.Downloads[0].Password ?? "";
             }
 
             return array;

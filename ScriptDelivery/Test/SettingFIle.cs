@@ -46,7 +46,8 @@ namespace ScriptDelivery.Test
                     {
                         new Download()
                         {
-                            Path = @"\\192.168.20.101\share1\Sample001.txt",
+                            SourcePath = @"\\192.168.20.101\share1\Sample001.txt",
+                            DestinationPath = @"C:\App\Sample\Sample001.txt",
                             Force = "true",
                         },
                     },

@@ -11,8 +11,11 @@ namespace ScriptDelivery.Works
 {
     internal class Download
     {
-        [YamlMember(Alias = "path")]
-        public string Path { get; set; }
+        [YamlMember(Alias = "source")]
+        public string SourcePath { get; set; }
+
+        [YamlMember(Alias = "destination")]
+        public string DestinationPath { get; set; }
 
         [YamlMember(Alias = "protocol"), Values("Protocol")]
         public string Protocol { get; set; }
