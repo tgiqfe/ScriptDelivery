@@ -17,9 +17,6 @@ namespace ScriptDelivery.Works
         [YamlMember(Alias = "destination")]
         public string DestinationPath { get; set; }
 
-        [YamlMember(Alias = "protocol"), Values("Protocol")]
-        public string Protocol { get; set; }
-
         [YamlMember(Alias = "force")]
         public string Force { get; set; }
 
@@ -28,12 +25,6 @@ namespace ScriptDelivery.Works
 
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
-
-        public Protocol GetProtocol()
-        {
-            return ValuesAttribute.GetEnumValue<Protocol>(
-                this.GetType().GetProperty("Protocol"), this.Protocol);
-        }
 
         public bool GetForce()
         {

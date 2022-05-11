@@ -162,7 +162,6 @@ namespace ScriptDelivery
                 mapping.Work = new Work();
                 mapping.Work.Downloads = new Download[1] { new Download() };
                 mapping.Work.Downloads[0].SourcePath = line["Path"];
-                mapping.Work.Downloads[0].Protocol = line["Protocol"];
                 mapping.Work.Downloads[0].Force = line["Force"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];
                 mapping.Work.Downloads[0].Password = line["Password"];
@@ -183,7 +182,6 @@ namespace ScriptDelivery
                 "Param",
                 "Source",
                 "Destination",
-                "Protocol",
                 "Force",
                 "UserName",
                 "Password",
@@ -198,32 +196,20 @@ namespace ScriptDelivery
         /// <returns></returns>
         private string[] ToParamArray()
         {
-            string[] array = new string[_csvHeader.Length];
-
-            array[0] = this.Require.GetRequireMode().ToString();
-            if (this.Require.RequireRules?.Length > 0)
+            return new string[]
             {
-                array[1] = Require.RequireRules[0].GetRuleTarget().ToString();
-                array[2] = Require.RequireRules[0].GetMatchType().ToString();
-                array[3] = Require.RequireRules[0].GetInvert().ToString();
-                var tempList = new List<string>();
-                foreach (var pair in Require.RequireRules[0].Param)
-                {
-                    tempList.Add($"{pair.Key}={pair.Value}");
-                }
-                array[4] = string.Join(" ", tempList);
-            }
-            if (this.Work.Downloads?.Length > 0)
-            {
-                array[5] = Work.Downloads[0].SourcePath ?? "";
-                array[6] = Work.Downloads[0].DestinationPath ?? "";
-                array[7] = Work.Downloads[0].GetProtocol().ToString();
-                array[8] = Work.Downloads[0].GetForce().ToString();
-                array[9] = Work.Downloads[0].UserName ?? "";
-                array[10] = Work.Downloads[0].Password ?? "";
-            }
-
-            return array;
+                Require.GetRequireMode().ToString(),
+                Require.RequireRules[0].GetRuleTarget().ToString(),
+                Require.RequireRules[0].GetMatchType().ToString(),
+                Require.RequireRules[0].GetInvert().ToString(),
+                Require.RequireRules?.Length > 0 ?
+                    string.Join(" ", Require.RequireRules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",
+                Work.Downloads[0].SourcePath ?? "",
+                Work.Downloads[0].DestinationPath ?? "",
+                Work.Downloads[0].GetForce().ToString(),
+                Work.Downloads[0].UserName ?? "",
+                Work.Downloads[0].Password ?? "",
+            };
         }
 
         #endregion

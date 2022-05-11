@@ -6,16 +6,18 @@ using ScriptDelivery.Works;
 using ScriptDelivery;
 using ScriptDelivery.Net;
 
-bool debug = false;
+bool debug = true;
 if (debug)
 {
+    ScriptDelivery.Test.SettingFile.Create01();
+
     Console.ReadLine();
     Environment.Exit(0);
 }
 
 
-var client = new ScriptDeliveryClient();
-client.MappingRequest("http://localhost:5000/map").Wait();
+//var client = new ScriptDeliveryClient();
+//client.MappingRequest("http://localhost:5000").Wait();
 
 
 

@@ -23,7 +23,6 @@
     <Compile Include="..\ScriptDelivery\SubCandidate.cs" Link="ScriptDelivery\SubCandidate.cs" />
     <Compile Include="..\ScriptDelivery\ValuesAttribute.cs" Link="ScriptDelivery\ValuesAttribute.cs" />
     <Compile Include="..\ScriptDelivery\Works\Download.cs" Link="ScriptDelivery\Works\Download.cs" />
-    <Compile Include="..\ScriptDelivery\Works\Protocol.cs" Link="ScriptDelivery\Works\Protocol.cs" />
     <Compile Include="..\ScriptDelivery\Works\Work.cs" Link="ScriptDelivery\Works\Work.cs" />
   </ItemGroup>
 

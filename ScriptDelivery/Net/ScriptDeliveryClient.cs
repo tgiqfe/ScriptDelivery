@@ -12,26 +12,52 @@ namespace ScriptDelivery.Net
 {
     internal class ScriptDeliveryClient
     {
-        public async Task MappingRequest(string url)
+        public async Task MappingRequest(string server)
         {
-            var content = new StringContent("");
+            List<Mapping> mappingList = null;
+
             using (var client = new HttpClient())
             {
-                var response = await client.PostAsync(url, content);
+                var content = new StringContent("");
+                var response = await client.PostAsync(server + "/map", content);
                 string json = await response.Content.ReadAsStringAsync();
 
-                var mappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
-
-                foreach (Mapping mapping in mappingList)
-                {
-                    Console.WriteLine(mapping.Require.RequireMode);
-                }
+                mappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
             }
-        }
 
-        public async Task DownloadListRequest(string url)
-        {
-            new StringContent("", Encoding.UTF8, "application/json");
+            Rancher rancher = new Rancher() { MappingList = mappingList };
+            rancher.MapMathcingCheck();
+            if (rancher.SmbDownloadList?.Count > 0)
+            {
+                //  ファイルサーバ(Smb)からダウンロード
+            }
+            if (rancher.DownloadFileRequest.Files?.Count > 0)
+            {
+                //  ScriptDeliveryサーバからダウンロード
+                using (var client = new HttpClient())
+                {
+                    var content = new StringContent(
+                        JsonSerializer.Serialize(rancher.DownloadFileRequest),
+                        Encoding.UTF8,
+                        "application/json");
+                    var response = await client.PostAsync(server + "/download/list", content);
+                    string json = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(json);
+                    
+
+                }
+
+
+
+
+            }
+
+
+
+
+
+
+
         }
     }
 }

@@ -19,7 +19,9 @@ namespace ScriptDelivery.Requires
         public RequireMode GetRequireMode()
         {
             return ValuesAttribute.GetEnumValue<RequireMode>(
-                this.GetType().GetProperty("RequireMode"), this.RequireMode);
+                this.GetType().GetProperty(
+                    "RequireMode", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                this.RequireMode);
         }
     }
 }

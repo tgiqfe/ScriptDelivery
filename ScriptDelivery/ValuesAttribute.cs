@@ -72,23 +72,6 @@ namespace ScriptDelivery
                         new SubCandidate("registry", "reg", "registories") }
                 },
                 {
-                    "Overwrite", new SubCandidate[]
-                    {
-                        new SubCandidate("none", "no"),
-                        new SubCandidate("force", "forse"),
-                        new SubCandidate("mirror", "mirr", "mir"),
-                        new SubCandidate("merge", "mrg"),
-                    }
-                },
-                {
-                    "_csvHeader", new SubCandidate[]
-                    {
-                        new SubCandidate("local"),
-                        new SubCandidate("http", "https"),
-                        new SubCandidate("smb", "cifs"),
-                    }
-                },
-                {
                     "Location", new SubCandidate[]{
                         new SubCandidate("all"),
                         new SubCandidate("process", "proc"),

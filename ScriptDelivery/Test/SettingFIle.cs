@@ -9,7 +9,7 @@ using ScriptDelivery.Works;
 
 namespace ScriptDelivery.Test
 {
-    internal class SettingFIle
+    internal class SettingFile
     {
         public static void Create01()
         {
@@ -46,8 +46,14 @@ namespace ScriptDelivery.Test
                     {
                         new Download()
                         {
-                            SourcePath = @"\\192.168.20.101\share1\Sample001.txt",
+                            SourcePath = @"Sample001.txt",
                             DestinationPath = @"C:\App\Sample\Sample001.txt",
+                            Force = "true",
+                        },
+                        new Download()
+                        {
+                            SourcePath = @"Sample002.txt",
+                            DestinationPath = @"C:\App\Sample\Sample002.txt",
                             Force = "true",
                         },
                     },
@@ -59,7 +65,8 @@ namespace ScriptDelivery.Test
                 mapping
             };
 
-            Mapping.Serialize(list, "sample02.yml");
+            Mapping.Serialize(list, "sample03.yml");
+            Mapping.Serialize(list, "sample03.csv");
 
         }
     }

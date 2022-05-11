@@ -19,7 +19,7 @@ namespace ScriptDelivery
 
         public string Check(string text)
         {
-            return this.Candidate.Any(x => x.Equals(x, StringComparison.OrdinalIgnoreCase)) ?
+            return this.Candidate.Any(x => x.Equals(text, StringComparison.OrdinalIgnoreCase)) ?
                 Name : null;
         }
 

@@ -6,35 +6,51 @@ using System.Threading.Tasks;
 using ScriptDelivery.Requires;
 using ScriptDelivery.Requires.Matcher;
 using ScriptDelivery.Works;
+using ScriptDelivery.Net;
 
 namespace ScriptDelivery
 {
     internal class Rancher
     {
-        private List<Mapping> _mappingList = null;
+        public List<string> SmbDownloadList { get; set; }
+        public DownloadFileRequest DownloadFileRequest { get; set; }
+
+        public List<Mapping> MappingList = null;
 
         public Rancher() { }
 
         public Rancher(string filePath)
         {
-            _mappingList = Mapping.Deserialize(filePath);
+            MappingList = Mapping.Deserialize(filePath);
         }
 
-        public void RequestProcess()
+        public void MapMathcingCheck()
         {
-            foreach (var mapping in _mappingList)
+            foreach (var mapping in MappingList)
             {
                 RequireMode mode = mapping.Require.GetRequireMode();
 
-                bool ret = TestRequire(mapping.Require.RequireRules, mode);
+                bool ret = CheckRequire(mapping.Require.RequireRules, mode);
                 if (ret)
                 {
-                    ProcessWork(mapping.Work.Downloads);
+                    foreach (var download in mapping.Work.Downloads)
+                    {
+                        if (download.SourcePath.StartsWith("\\\\"))
+                        {
+                            //  ファイルサーバ(Smb)からダウンロード
+                        }
+                        else
+                        {
+                            //  ScriptDeliveryサーバからHTTPでダウンロード
+                            DownloadFileRequest ??= new DownloadFileRequest(init: true);
+                            DownloadFileRequest.Files.Add(download.SourcePath);
+                        }
+                    }
                 }
             }
         }
 
-        private bool TestRequire(RequireRule[] rules, RequireMode mode)
+        private bool CheckRequire(RequireRule[] rules, RequireMode mode)
         {
             if (mode == RequireMode.None)
             {
@@ -54,15 +70,6 @@ namespace ScriptDelivery
                 RequireMode.Or => results.Any(x => x),
                 _ => false,
             };
-        }
-
-        private void ProcessWork(Download[] downloads)
-        {
-
-
-            //  ここにダウンロード処理を開始させていく記述を
-
-
         }
     }
 }
