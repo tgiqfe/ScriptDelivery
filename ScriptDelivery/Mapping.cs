@@ -14,6 +14,9 @@ namespace ScriptDelivery
 {
     internal class Mapping
     {
+        [YamlIgnore]
+        public string FileName { get; set; }
+
         public Require Require { get; set; }
 
         public Work Work { get; set; }
@@ -28,6 +31,7 @@ namespace ScriptDelivery
         public static List<Mapping> Deserialize(string filePath)
         {
             List<Mapping> list = null;
+            string fileName = Path.GetFileName(filePath);
 
             if (File.Exists(filePath))
             {
@@ -42,6 +46,7 @@ namespace ScriptDelivery
                         ".txt" => null,
                         _ => null,
                     };
+                    list.ForEach(x => x.FileName = fileName);
                 }
             }
             else if (Directory.Exists(filePath))
@@ -136,7 +141,7 @@ namespace ScriptDelivery
                 mapping.Require = new Require();
                 mapping.Require.RequireMode = line["Mode"];
 
-                mapping.Require.RequireRules = new RequireRule[1];
+                mapping.Require.RequireRules = new RequireRule[1] { new RequireRule() };
                 mapping.Require.RequireRules[0].RuleTarget = line["Target"];
                 mapping.Require.RequireRules[0].MatchType = line["Match"];
                 mapping.Require.RequireRules[0].Invert = line["Invert"];
@@ -146,13 +151,16 @@ namespace ScriptDelivery
                     ToList().
                     ForEach(x =>
                     {
-                        string[] fields = x.Split('=');
-                        dictionary[fields[0]] = fields[1];
+                        if (x.Contains("="))
+                        {
+                            string[] fields = x.Split('=');
+                            dictionary[fields[0]] = fields[1];
+                        }
                     });
                 mapping.Require.RequireRules[0].Param = dictionary;
 
                 mapping.Work = new Work();
-                mapping.Work.Downloads = new Download[1];
+                mapping.Work.Downloads = new Download[1] { new Download() };
                 mapping.Work.Downloads[0].Path = line["Path"];
                 mapping.Work.Downloads[0].Overwrite = line["Overwrite"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];

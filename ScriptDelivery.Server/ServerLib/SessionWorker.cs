@@ -31,6 +31,7 @@ namespace ScriptDelivery.Server.ServerLib
 
             //  設定ファイル読み込み
             Item.Setting = Setting.Deserialize("setting.json");
+            Item.Setting.ChangePath();
 
             //  Mappingリストを取得
             Item.MappingFileCollection = new MappingFileCollection(Item.Setting.MapsPath);

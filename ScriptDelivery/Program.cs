@@ -4,66 +4,18 @@ using System.Text.RegularExpressions;
 using ScriptDelivery.Requires;
 using ScriptDelivery.Works;
 using ScriptDelivery;
+using ScriptDelivery.Net;
 
-bool init = true;
-if (init)
+bool debug = false;
+if (debug)
 {
-    Mapping mapping = new Mapping()
-    {
-        Require = new Require()
-        {
-            RequireMode = "all",
-            RequireRules = new RequireRule[]
-            {
-                new RequireRule()
-                {
-                    RuleTarget = "HostName",
-                    MatchType = "Equal",
-                    Param = new Dictionary<string, string>()
-                    {
-                        { "Name", "AAAA01" },
-                    },
-                },
-                new RequireRule()
-                {
-                    RuleTarget = "IPAddress",
-                    MatchType = "Equal",
-                    Param = new Dictionary<string, string>()
-                    {
-                        {"IPAddress", "192.168.10.100" },
-                    },
-                },
-            }
-        },
-        Work = new Work()
-        {
-            Downloads = new Download[]
-            {
-                new Download()
-                {
-                    Path = @"\\192.168.20.101\share1\Sample001.txt",
-                    Overwrite = "force",
-                },
-            },
-        }
-    };
-
-    List<Mapping> list = new List<Mapping>()
-    {
-        mapping
-    };
-
-    Mapping.Serialize(list, "sample.csv");
-
-
-
-
     Console.ReadLine();
     Environment.Exit(0);
 }
 
 
-
+var client = new ScriptDeliveryClient();
+client.MappingRequest("http://localhost:5000/map").Wait();
 
 
 

@@ -2,6 +2,12 @@ using System;
 using System.Text;
 using ScriptDelivery.Server.ServerLib;
 
+/*
+var setting = Setting.Deserialize("setting.json");
+setting.Serialize("setting.json");
+Console.ReadLine();
+Environment.Exit(0);
+*/
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -10,9 +16,9 @@ app.MapGet("/", () => "");
 
 app.MapPost("/", () => "");
 
-app.MapPost("/map", (HttpContext context) =>
+app.MapPost("/map", () =>
 {
-
+    return Item.MappingFileCollection.Content;
 });
 
 app.MapPost("/download/list", async (HttpContext context) =>
