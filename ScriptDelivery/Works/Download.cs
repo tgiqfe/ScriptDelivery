@@ -13,6 +13,9 @@ namespace ScriptDelivery.Works
         [YamlMember(Alias = "path")]
         public string Path { get; set; }
 
+        [YamlMember(Alias = "protocol"), Values("Protocol")]
+        public string Protocol { get; set; }
+
         [YamlMember(Alias = "overwrite"), Values("Overwrite")]
         public string Overwrite { get; set; }
 
@@ -26,6 +29,12 @@ namespace ScriptDelivery.Works
         {
             return ValuesAttribute.GetEnumValue<Overwrite>(
                 this.GetType().GetProperty("Overwrite"), this.Overwrite);
+        }
+
+        public Protocol GetProtocol()
+        {
+            return ValuesAttribute.GetEnumValue<Protocol>(
+                this.GetType().GetProperty("Protocol"), this.Protocol);
         }
     }
 }

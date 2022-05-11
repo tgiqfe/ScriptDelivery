@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using ScriptDelivery.Server.ServerLib;
+using ScriptDelivery.Net;
 
 /*
 var setting = Setting.Deserialize("setting.json");

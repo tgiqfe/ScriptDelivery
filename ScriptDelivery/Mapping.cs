@@ -162,6 +162,7 @@ namespace ScriptDelivery
                 mapping.Work = new Work();
                 mapping.Work.Downloads = new Download[1] { new Download() };
                 mapping.Work.Downloads[0].Path = line["Path"];
+                mapping.Work.Downloads[0].Protocol = line["Protocol"];
                 mapping.Work.Downloads[0].Overwrite = line["Overwrite"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];
                 mapping.Work.Downloads[0].Password = line["Password"];
@@ -181,6 +182,7 @@ namespace ScriptDelivery
                 "Invert",
                 "Param",
                 "Path",
+                "Protocol",
                 "Overwrite",
                 "UserName",
                 "Password",
@@ -195,8 +197,7 @@ namespace ScriptDelivery
         /// <returns></returns>
         private string[] ToParamArray()
         {
-            //  ヘッダーの数を直接指定・・・
-            string[] array = new string[9];
+            string[] array = new string[_csvHeader.Length];
 
             array[0] = this.Require.GetRequireMode().ToString();
             if (this.Require.RequireRules?.Length > 0)
@@ -214,9 +215,10 @@ namespace ScriptDelivery
             if (this.Work.Downloads?.Length > 0)
             {
                 array[5] = Work.Downloads[0].Path ?? "";
-                array[6] = Work.Downloads[0].GetOverwrite().ToString();
-                array[7] = Work.Downloads[0].UserName ?? "";
-                array[8] = Work.Downloads[0].Password ?? "";
+                array[6] = Work.Downloads[0].Protocol ?? "";
+                array[7] = Work.Downloads[0].GetOverwrite().ToString();
+                array[8] = Work.Downloads[0].UserName ?? "";
+                array[9] = Work.Downloads[0].Password ?? "";
             }
 
             return array;

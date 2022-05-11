@@ -3,6 +3,7 @@ using System.Text;
 using ScriptDelivery;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using ScriptDelivery.Net;
 
 namespace ScriptDelivery.Server.ServerLib
 {

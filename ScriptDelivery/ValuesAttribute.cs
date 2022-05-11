@@ -81,6 +81,14 @@ namespace ScriptDelivery
                     }
                 },
                 {
+                    "_csvHeader", new SubCandidate[]
+                    {
+                        new SubCandidate("local"),
+                        new SubCandidate("http", "https"),
+                        new SubCandidate("smb", "cifs"),
+                    }
+                },
+                {
                     "Location", new SubCandidate[]{
                         new SubCandidate("all"),
                         new SubCandidate("process", "proc"),

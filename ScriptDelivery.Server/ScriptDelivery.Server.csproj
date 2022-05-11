@@ -8,6 +8,13 @@
   <ItemGroup>
     <Compile Include="..\ScriptDelivery\KeysAttribute.cs" Link="ScriptDelivery\KeysAttribute.cs" />
     <Compile Include="..\ScriptDelivery\Mapping.cs" Link="ScriptDelivery\Mapping.cs" />
+    <Compile Include="..\ScriptDelivery\Net\DownloadFile.cs" Link="ScriptDelivery\Net\DownloadFile.cs" />
+    <Compile Include="..\ScriptDelivery\Net\DownloadFileCollection.cs" Link="ScriptDelivery\Net\DownloadFileCollection.cs" />
+    <Compile Include="..\ScriptDelivery\Net\DownloadFileRequest.cs" Link="ScriptDelivery\Net\DownloadFileRequest.cs" />
+    <Compile Include="..\ScriptDelivery\Net\DownloadFileResponse.cs" Link="ScriptDelivery\Net\DownloadFileResponse.cs" />
+    <Compile Include="..\ScriptDelivery\Net\FileBase.cs" Link="ScriptDelivery\Net\FileBase.cs" />
+    <Compile Include="..\ScriptDelivery\Net\MappingFile.cs" Link="ScriptDelivery\Net\MappingFile.cs" />
+    <Compile Include="..\ScriptDelivery\Net\MappingFileCollection.cs" Link="ScriptDelivery\Net\MappingFileCollection.cs" />
     <Compile Include="..\ScriptDelivery\Requires\MatchType.cs" Link="ScriptDelivery\Requires\MatchType.cs" />
     <Compile Include="..\ScriptDelivery\Requires\Require.cs" Link="ScriptDelivery\Requires\Require.cs" />
     <Compile Include="..\ScriptDelivery\Requires\RequireMode.cs" Link="ScriptDelivery\Requires\RequireMode.cs" />
@@ -17,6 +24,7 @@
     <Compile Include="..\ScriptDelivery\ValuesAttribute.cs" Link="ScriptDelivery\ValuesAttribute.cs" />
     <Compile Include="..\ScriptDelivery\Works\Download.cs" Link="ScriptDelivery\Works\Download.cs" />
     <Compile Include="..\ScriptDelivery\Works\Overwrite.cs" Link="ScriptDelivery\Works\Overwrite.cs" />
+    <Compile Include="..\ScriptDelivery\Works\Protocol.cs" Link="ScriptDelivery\Works\Protocol.cs" />
     <Compile Include="..\ScriptDelivery\Works\Work.cs" Link="ScriptDelivery\Works\Work.cs" />
   </ItemGroup>
 
@@ -24,7 +32,7 @@
     <Folder Include="ScriptDelivery\Requires\" />
     <Folder Include="ScriptDelivery\Works\" />
     <Folder Include="nginx_conf\conf.d\" />
-    <Folder Include="ScriptDelivery\" />
+    <Folder Include="ScriptDelivery\Net\" />
   </ItemGroup>
 
   <ItemGroup>
