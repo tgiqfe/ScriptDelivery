@@ -10,9 +10,6 @@
     <Compile Include="..\ScriptDelivery\Mapping.cs" Link="ScriptDelivery\Mapping.cs" />
     <Compile Include="..\ScriptDelivery\Net\DownloadFile.cs" Link="ScriptDelivery\Net\DownloadFile.cs" />
     <Compile Include="..\ScriptDelivery\Net\DownloadFileCollection.cs" Link="ScriptDelivery\Net\DownloadFileCollection.cs" />
-    <Compile Include="..\ScriptDelivery\Net\DownloadFileRequest.cs" Link="ScriptDelivery\Net\DownloadFileRequest.cs" />
-    <Compile Include="..\ScriptDelivery\Net\DownloadFileResponse.cs" Link="ScriptDelivery\Net\DownloadFileResponse.cs" />
-    <Compile Include="..\ScriptDelivery\Net\FileBase.cs" Link="ScriptDelivery\Net\FileBase.cs" />
     <Compile Include="..\ScriptDelivery\Net\MappingFile.cs" Link="ScriptDelivery\Net\MappingFile.cs" />
     <Compile Include="..\ScriptDelivery\Net\MappingFileCollection.cs" Link="ScriptDelivery\Net\MappingFileCollection.cs" />
     <Compile Include="..\ScriptDelivery\Requires\MatchType.cs" Link="ScriptDelivery\Requires\MatchType.cs" />

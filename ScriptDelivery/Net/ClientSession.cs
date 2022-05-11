@@ -7,22 +7,28 @@ using ScriptDelivery.Requires;
 using ScriptDelivery.Requires.Matcher;
 using ScriptDelivery.Works;
 using ScriptDelivery.Net;
+using System.Text.Json;
+using System.Net;
 
-namespace ScriptDelivery
+namespace ScriptDelivery.Net
 {
-    //  ClientSessionクラスへ移行予定。
-    internal class Rancher
+    internal class ClientSession
     {
+        public List<Mapping> MappingList { get; set; }
         public List<string> SmbDownloadList { get; set; }
         public List<string> HttpDownloadList { get; set; }
 
-        public List<Mapping> MappingList = null;
-
-        public Rancher() { }
-
-        public Rancher(string filePath)
+        public async void DownloadMappingFile(string server)
         {
-            MappingList = Mapping.Deserialize(filePath);
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync(server + "/map", new StringContent(""));
+                if(response.StatusCode == HttpStatusCode.OK)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    this.MappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
+                }
+            }
         }
 
         public void MapMathcingCheck()
@@ -45,6 +51,17 @@ namespace ScriptDelivery
                             //  ScriptDeliveryサーバからHTTPでダウンロード
                             HttpDownloadList ??= new List<string>();
                             HttpDownloadList.Add(download.SourcePath);
+
+
+
+                            DownloadFile dlFile = new DownloadFile()
+                            {
+                                Name = download.SourcePath,
+                                DestinationPath = download.DestinationPath,
+                            };
+                            
+                            //  ⇒DownloadFileを送信/受信する感じで
+
                         }
                     }
                 }
@@ -72,5 +89,6 @@ namespace ScriptDelivery
                 _ => false,
             };
         }
+
     }
 }

@@ -31,21 +31,25 @@ namespace ScriptDelivery.Net
             {
                 //  ファイルサーバ(Smb)からダウンロード
             }
-            if (rancher.DownloadFileRequest.Files?.Count > 0)
+            if (rancher.HttpDownloadList?.Count > 0)
             {
                 //  ScriptDeliveryサーバからダウンロード
+
+                DownloadFileCollection collection = null;
+
                 using (var client = new HttpClient())
                 {
                     var content = new StringContent(
-                        JsonSerializer.Serialize(rancher.DownloadFileRequest),
+                        JsonSerializer.Serialize(rancher.HttpDownloadList),
                         Encoding.UTF8,
                         "application/json");
                     var response = await client.PostAsync(server + "/download/list", content);
                     string json = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(json);
-                    
 
+                    collection = JsonSerializer.Deserialize<DownloadFileCollection>(json);
                 }
+
+                
 
 
 

@@ -2,12 +2,17 @@
 using ScriptDelivery;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ScriptDelivery.Requires;
+//using ScriptDelivery.Requires.Matcher;
+using ScriptDelivery.Works;
+using ScriptDelivery.Net;
 
 namespace ScriptDelivery.Net
 {
     internal class MappingFileCollection
     {
         private List<MappingFile> _list = null;
+
 
         public string Content { get; set; }
 
@@ -32,5 +37,8 @@ namespace ScriptDelivery.Net
         {
             _list = JsonSerializer.Deserialize<List<MappingFile>>(content);
         }
+
+
+
     }
 }

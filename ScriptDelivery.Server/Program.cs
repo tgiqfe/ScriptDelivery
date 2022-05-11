@@ -26,8 +26,8 @@ app.MapPost("/download/list", async (HttpContext context) =>
 {
     if (context.Request.HasJsonContentType())
     {
-        DownloadFileRequest fileReq = await context.Request.ReadFromJsonAsync<DownloadFileRequest>();
-        DownloadFileResponse fileRes = Item.DownloadFileCollection.GetResponse(fileReq);
+        List<string> fileReq = await context.Request.ReadFromJsonAsync<List<string>>();
+        IEnumerable<DownloadFile> fileRes = Item.DownloadFileCollection.GetResponse(fileReq);
         await context.Response.WriteAsJsonAsync(fileRes);
     }
 });
