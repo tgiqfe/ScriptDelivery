@@ -38,7 +38,7 @@ namespace ScriptDelivery.Requires
 
         public bool GetInvert()
         {
-            return !(BooleanCandidate.IsNullableFalse(this.Invert) ?? false);
+            return !(BooleanCandidate.IsNullableFalse(this.Invert) ?? true);
         }
     }
 }

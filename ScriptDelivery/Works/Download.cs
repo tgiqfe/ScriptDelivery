@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 using System.Diagnostics;
+using ScriptDelivery.Lib;
 
 namespace ScriptDelivery.Works
 {
@@ -16,8 +17,8 @@ namespace ScriptDelivery.Works
         [YamlMember(Alias = "protocol"), Values("Protocol")]
         public string Protocol { get; set; }
 
-        [YamlMember(Alias = "overwrite"), Values("Overwrite")]
-        public string Overwrite { get; set; }
+        [YamlMember(Alias = "force")]
+        public string Force { get; set; }
 
         [YamlMember(Alias = "user")]
         public string UserName { get; set; }
@@ -25,16 +26,15 @@ namespace ScriptDelivery.Works
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
 
-        public Overwrite GetOverwrite()
-        {
-            return ValuesAttribute.GetEnumValue<Overwrite>(
-                this.GetType().GetProperty("Overwrite"), this.Overwrite);
-        }
-
         public Protocol GetProtocol()
         {
             return ValuesAttribute.GetEnumValue<Protocol>(
                 this.GetType().GetProperty("Protocol"), this.Protocol);
+        }
+
+        public bool GetForce()
+        {
+            return !(BooleanCandidate.IsNullableFalse(this.Force) ?? true);
         }
     }
 }
