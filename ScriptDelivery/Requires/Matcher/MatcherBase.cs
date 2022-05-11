@@ -32,18 +32,21 @@ namespace ScriptDelivery.Requires.Matcher
         {
             if (param == null) { return; }
 
+            //  大文字小文字を無視するDictionaryに変換
+            var dictionary = new Dictionary<string, string>(param, StringComparer.OrdinalIgnoreCase);
+
             var props = this.GetType().GetProperties(
-                BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+                BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
             foreach (var prop in props)
             {
                 var paramAttr = prop.GetCustomAttribute<MatcherParameterAttribute>();
                 if (paramAttr == null) { continue; }
 
                 var keys = prop.GetCustomAttribute<KeysAttribute>();
-                string matchKey = keys?.GetCandidate().FirstOrDefault(x => param.ContainsKey(x));
+                string matchKey = keys?.GetCandidate().FirstOrDefault(x => dictionary.ContainsKey(x));
                 if (matchKey != null)
                 {
-                    string matchValue = param[matchKey];
+                    string matchValue = dictionary[matchKey];
                     Type type = prop.PropertyType;
 
                     if (type == typeof(string))

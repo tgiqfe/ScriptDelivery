@@ -19,8 +19,8 @@ namespace ScriptDelivery
         {
             _map ??= LoadMap();
 
-            var list = new List<string>();    //  例外対策は無し。もし例外が発生した場合はコード見直し
-            return _keywords.Select(x => _map[x]).Aggregate((x, y) => x.Concat(y).ToArray());
+            //  例外対策は無し。もし例外が発生した場合はコード見直し
+            return _keywords.Select(x => _map[x]).Aggregate((x, y) => y.Concat(x).ToArray());
         }
 
         #region Key candidate map

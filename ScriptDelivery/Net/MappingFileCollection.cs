@@ -16,9 +16,12 @@ namespace ScriptDelivery.Net
         public MappingFileCollection(string mapsPath)
         {
             _list = new List<MappingFile>();
-            foreach (string file in Directory.GetFiles(mapsPath))
+            if (Directory.Exists(mapsPath))
             {
-                _list.Add(new MappingFile(file));
+                foreach (string file in Directory.GetFiles(mapsPath))
+                {
+                    _list.Add(new MappingFile(file));
+                }
             }
 
             var list = _list.SelectMany(x => x.MappingList.Select(y => y)).ToList();

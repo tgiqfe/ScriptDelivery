@@ -161,7 +161,8 @@ namespace ScriptDelivery
 
                 mapping.Work = new Work();
                 mapping.Work.Downloads = new Download[1] { new Download() };
-                mapping.Work.Downloads[0].SourcePath = line["Path"];
+                mapping.Work.Downloads[0].SourcePath = line["Source"];
+                mapping.Work.Downloads[0].SourcePath = line["Destination"];
                 mapping.Work.Downloads[0].Force = line["Force"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];
                 mapping.Work.Downloads[0].Password = line["Password"];

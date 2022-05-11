@@ -6,7 +6,7 @@ using ScriptDelivery.Works;
 using ScriptDelivery;
 using ScriptDelivery.Net;
 
-bool debug = true;
+bool debug = false;
 if (debug)
 {
     ScriptDelivery.Test.SettingFile.Create01();
@@ -16,8 +16,8 @@ if (debug)
 }
 
 
-//var client = new ScriptDeliveryClient();
-//client.MappingRequest("http://localhost:5000").Wait();
+var client = new ScriptDeliveryClient();
+client.MappingRequest("http://localhost:5000").Wait();
 
 
 
