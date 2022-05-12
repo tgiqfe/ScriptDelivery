@@ -10,7 +10,7 @@ namespace ScriptDelivery.Requires.Matcher
 {
     internal class MatcherBase
     {
-        public static MatcherBase Get(RuleTarget target)
+        public static MatcherBase Activate(RuleTarget target)
         {
             return target switch
             {

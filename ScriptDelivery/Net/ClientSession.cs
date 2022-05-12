@@ -27,7 +27,7 @@ namespace ScriptDelivery.Net
 
 
 
-        public async void DownloadMappingFile(string server)
+        public async Task DownloadMappingFile(string server)
         {
             using (var client = new HttpClient())
             using (var content = new StringContent(""))
@@ -52,7 +52,7 @@ namespace ScriptDelivery.Net
                 }
                 var results = rules.ToList().Select(x =>
                 {
-                    MatcherBase matcher = MatcherBase.Get(x.GetRuleTarget());
+                    MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
                     matcher.SetParam(x.Param);
                     return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
                 });
@@ -67,7 +67,24 @@ namespace ScriptDelivery.Net
 
             MappingList = MappingList.Where(x =>
             {
-                return checkRequire(x.Require.RequireRules, x.Require.GetRequireMode());
+                RequireMode mode = x.Require.GetRequireMode();
+                if (mode == RequireMode.None)
+                {
+                    return true;
+                }
+                var results = x.Require.RequireRules.Select(x =>
+                {
+                    MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
+                    matcher.SetParam(x.Param);
+                    return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
+                });
+                return mode switch
+                {
+                    RequireMode.And => results.All(x => x),
+                    RequireMode.Or => results.Any(x => x),
+                    _ => false,
+                };
+                //return checkRequire(x.Require.RequireRules, x.Require.GetRequireMode());
             }).ToList();
 
             this.SmbDownloadList = new List<string>();
@@ -98,43 +115,53 @@ namespace ScriptDelivery.Net
 
         public void DownloadSmbFile()
         {
-
+            if (SmbDownloadList?.Count > 0) { }
         }
 
         public async Task DownloadHttpSearch(string server)
         {
-            using (var client = new HttpClient())
-            using (var content = new StringContent(
-                 JsonSerializer.Serialize(HttpDownloadList, options), Encoding.UTF8, "application/json"))
-            using (var response = await client.PostAsync(server + "/download/list", content))
+            if (HttpDownloadList?.Count > 0)
             {
-                string json = await response.Content.ReadAsStringAsync();
-                HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+
+                using (var client = new HttpClient())
+                using (var content = new StringContent(
+                     JsonSerializer.Serialize(HttpDownloadList, options), Encoding.UTF8, "application/json"))
+                using (var response = await client.PostAsync(server + "/download/list", content))
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+                }
             }
         }
 
         public async Task DownloadHttpStart(string server)
         {
-            using (var client = new HttpClient())
+            if (HttpDownloadList?.Count > 0)
             {
-                foreach (var dlFile in HttpDownloadList)
+                using (var client = new HttpClient())
                 {
-                    //  ローカル側のファイルとの一致チェック
-                    if (!(dlFile.Downloadable ?? false)) { continue; }
-                    if (dlFile.CompareFile(dlFile.DestinationPath) && !(dlFile.Overwrite ?? false))
+                    foreach (var dlFile in HttpDownloadList)
                     {
-                        continue;
-                    }
-
-                    string fileName = dlFile.Name.Replace("\\", "/");
-                    using (var response = await client.GetAsync(server + "/download/files/" + dlFile.Name))
-                    {
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        //  ローカル側のファイルとの一致チェック
+                        if (!(dlFile.Downloadable ?? false)) { continue; }
+                        if (dlFile.CompareFile(dlFile.DestinationPath) && !(dlFile.Overwrite ?? false))
                         {
-                            using (var stream = await response.Content.ReadAsStreamAsync())
-                            using (var fs = new FileStream(dlFile.DestinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            continue;
+                        }
+
+                        var urlQuery = new Dictionary<string, string>()
+                        {
+                            { "fileName", dlFile.Name }
+                        };
+                        using (var response = await client.GetAsync(server + $"/download/files?{await new FormUrlEncodedContent(urlQuery).ReadAsStringAsync()}"))
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
                             {
-                                stream.CopyTo(fs);
+                                using (var stream = await response.Content.ReadAsStreamAsync())
+                                using (var fs = new FileStream(dlFile.DestinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                                {
+                                    stream.CopyTo(fs);
+                                }
                             }
                         }
                     }

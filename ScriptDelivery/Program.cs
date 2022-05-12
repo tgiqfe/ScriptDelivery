@@ -16,8 +16,13 @@ if (debug)
 }
 
 
-//var client = new ScriptDeliveryClient();
-//client.MappingRequest("http://localhost:5000").Wait();
+var session = new ClientSession();
+session.DownloadMappingFile("http://localhost:5000").Wait();
+session.MapMathcingCheck();
+session.DownloadSmbFile();
+session.DownloadHttpSearch("http://localhost:5000").Wait();
+session.DownloadHttpStart("http://locahost:5000").Wait();
+
 
 
 

@@ -21,7 +21,7 @@ namespace ScriptDelivery.Net
         public DownloadFile(string basePath, string filePath)
         {
             this.Path = filePath;
-            this.Name = System.IO.Path.GetRelativePath(basePath, filePath);
+            this.Name = System.IO.Path.Combine(basePath, filePath);
             this.LastWriteTime = File.GetLastWriteTime(filePath);
             this.Hash = GetHash(filePath);
         }

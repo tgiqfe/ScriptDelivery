@@ -12,8 +12,6 @@ namespace ScriptDelivery.Net
 
         public DownloadFileCollection(string filesPath)
         {
-            //string basePath = filesPath.Trim('/').Trim('\\');
-
             _list = new List<DownloadFile>();
             _filesPath = filesPath;
             foreach (string file in Directory.GetFiles(filesPath))
@@ -42,7 +40,6 @@ namespace ScriptDelivery.Net
         }
 
         /// <summary>
-        /// (サーバ側処理)
         /// DownloadFileの変更/追加/削除チェック
         /// </summary>
         public void RecheckSource()

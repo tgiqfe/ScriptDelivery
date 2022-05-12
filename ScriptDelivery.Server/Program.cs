@@ -3,15 +3,14 @@ using System.Text;
 using ScriptDelivery.Server.ServerLib;
 using ScriptDelivery.Net;
 
-/*
-var setting = Setting.Deserialize("setting.json");
-setting.Serialize("setting.json");
-Console.ReadLine();
-Environment.Exit(0);
-*/
-
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
+
+var options = new System.Text.Json.JsonSerializerOptions()
+{
+    IgnoreReadOnlyProperties = true,
+    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+};
 
 app.MapGet("/", () => "");
 
@@ -21,12 +20,6 @@ app.MapPost("/map", () =>
 {
     return Item.MappingFileCollection.Content;
 });
-
-var options = new System.Text.Json.JsonSerializerOptions()
-{
-    IgnoreReadOnlyProperties = true,
-    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-};
 
 app.MapPost("/download/list", async (HttpContext context) =>
 {
@@ -38,9 +31,12 @@ app.MapPost("/download/list", async (HttpContext context) =>
     }
 });
 
-app.MapPost("/download/file", (HttpContext context) =>
+app.MapGet("/download/files", async (HttpContext context) =>
 {
-
+    string fileName = context.Request.Query["fileName"];
+    string filePath = Path.Combine(Item.Setting.FilesPath, fileName);
+    context.Response.Headers.Add("Content-Disposition", "attachment; filename=" + System.Web.HttpUtility.UrlEncode(fileName));
+    await context.Response.SendFileAsync(filePath);
 });
 
 
