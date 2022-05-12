@@ -16,14 +16,14 @@ namespace ScriptDelivery.Net
     {
         public List<Mapping> MappingList { get; set; }
         public List<string> SmbDownloadList { get; set; }
-        public List<string> HttpDownloadList { get; set; }
+        public List<DownloadFile> HttpDownloadList { get; set; }
 
         public async void DownloadMappingFile(string server)
         {
             using (var client = new HttpClient())
             {
                 var response = await client.PostAsync(server + "/map", new StringContent(""));
-                if(response.StatusCode == HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string json = await response.Content.ReadAsStringAsync();
                     this.MappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
@@ -33,40 +33,61 @@ namespace ScriptDelivery.Net
 
         public void MapMathcingCheck()
         {
+            MappingList = MappingList.Where(x =>
+            {
+                return CheckRequire(x.Require.RequireRules, x.Require.GetRequireMode());
+            }).ToList();
+
+            this.SmbDownloadList = new List<string>();
+            this.HttpDownloadList = new List<DownloadFile>();
+
             foreach (var mapping in MappingList)
             {
-                RequireMode mode = mapping.Require.GetRequireMode();
-
-                bool ret = CheckRequire(mapping.Require.RequireRules, mode);
-                if (ret)
+                mapping.Work.Downloads.ToList().ForEach(x =>
                 {
-                    foreach (var download in mapping.Work.Downloads)
+                    if (x.SourcePath.StartsWith("\\\\"))
                     {
-                        if (download.SourcePath.StartsWith("\\\\"))
-                        {
-                            //  ファイルサーバ(Smb)からダウンロード
-                        }
-                        else
-                        {
-                            //  ScriptDeliveryサーバからHTTPでダウンロード
-                            HttpDownloadList ??= new List<string>();
-                            HttpDownloadList.Add(download.SourcePath);
-
-
-
-                            DownloadFile dlFile = new DownloadFile()
-                            {
-                                Name = download.SourcePath,
-                                DestinationPath = download.DestinationPath,
-                            };
-                            
-                            //  ⇒DownloadFileを送信/受信する感じで
-
-                        }
+                        //  Smbダウンロード用ファイル
+                        SmbDownloadList.Add(x.SourcePath);
                     }
-                }
+                    else
+                    {
+                        //  Htttpダウンロード用ファイル
+                        HttpDownloadList.Add(new DownloadFile()
+                        {
+                            Name = x.SourcePath,
+                            DestinationPath = x.DestinationPath,
+                        });
+                    }
+                });
+            }
+
+        }
+
+        public void DownloadSmbFile()
+        {
+
+        }
+
+        public async Task DownloadHttpFile(string server)
+        {
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(
+                    JsonSerializer.Serialize(HttpDownloadList),
+                    Encoding.UTF8,
+                    "application/json");
+                var response = await client.PostAsync(server + "/download/list", content);
+                string json = await response.Content.ReadAsStringAsync();
+
+                List<DownloadFile> tempList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+
+
             }
         }
+
+
+
 
         private bool CheckRequire(RequireRule[] rules, RequireMode mode)
         {

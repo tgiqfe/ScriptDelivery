@@ -16,8 +16,8 @@ if (debug)
 }
 
 
-var client = new ScriptDeliveryClient();
-client.MappingRequest("http://localhost:5000").Wait();
+//var client = new ScriptDeliveryClient();
+//client.MappingRequest("http://localhost:5000").Wait();
 
 
 
