@@ -11,6 +11,8 @@ namespace ScriptDelivery.Server
         public string MapsPath { get; set; }
         public string FilesPath { get; set; }
 
+
+
         public void Init()
         {
             this.MapsPath = "store/maps";

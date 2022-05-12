@@ -39,6 +39,7 @@ namespace ScriptDelivery
                 //WriteIndented = true,
                 //Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
+            //  ●[log]接続先サーバの情報
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadMappingFile()
         {
+            //  ●[log]Init接続。Mappingファイルの要求
             using (var content = new StringContent(""))
             using (var response = await _client.PostAsync(_server + "/map", content))
             {
@@ -54,6 +56,11 @@ namespace ScriptDelivery
                 {
                     string json = await response.Content.ReadAsStringAsync();
                     this.MappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
+                    //  ●[log]接続成功。Mappingファイル取得
+                }
+                else
+                {
+                    //  ●[log]Mappingファイル取得失敗
                 }
             }
         }
@@ -63,6 +70,8 @@ namespace ScriptDelivery
         /// </summary>
         public void MapMathcingCheck()
         {
+            //  ●[log]Mappingファイルの中のRequireチェック
+
             MappingList = MappingList.Where(x =>
             {
                 RequireMode mode = x.Require.GetRequireMode();
@@ -83,6 +92,8 @@ namespace ScriptDelivery
                     _ => false,
                 };
             }).ToList();
+
+            //  ●[log]Requireチェック完了。Match: {MappingList.Length}件
 
             this.SmbDownloadList = new List<string>();
             this.HttpDownloadList = new List<DownloadFile>();
@@ -124,14 +135,24 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadHttpSearch()
         {
+            //  ●[log]Http Downloadファイル確認をサーバに送信
+
             if (HttpDownloadList?.Count > 0)
             {
                 using (var content = new StringContent(
                      JsonSerializer.Serialize(HttpDownloadList, _options), Encoding.UTF8, "application/json"))
                 using (var response = await _client.PostAsync(_server + "/download/list", content))
                 {
-                    string json = await response.Content.ReadAsStringAsync();
-                    HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+                    if(response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string json = await response.Content.ReadAsStringAsync();
+                        HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+                        //  ●[log]接続成功。Downloadファイルリスト取得
+                    }
+                    else
+                    {
+                        //  ●[log]Downloadファイルリスト取得に失敗
+                    }
                 }
             }
         }
@@ -142,6 +163,8 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadHttpStart()
         {
+            //  ●[log]Http Downloadファイルを要求
+
             if (HttpDownloadList?.Count > 0)
             {
                 foreach (var dlFile in HttpDownloadList)
@@ -167,6 +190,11 @@ namespace ScriptDelivery
                             {
                                 stream.CopyTo(fs);
                             }
+                            //  ●[log]Http Download完了。Path: {dlFile.DestinationPath}
+                        }
+                        else
+                        {
+                            //  ●[log]ファイルのダウンロードに失敗。Path: {dlFile.Destination}
                         }
                     }
                 }

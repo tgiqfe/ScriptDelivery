@@ -1,0 +1,10 @@
+﻿LogBody, Loggerをここに実装する
+
+ローカルファイル、Syslogのみ実装。
+Logstash転送は不要。サーバ側はFilebeatsに任せる。
+⇒想定通りに転送できない場合は、LogstashTransferも再検討すること。
+
+通信失敗時用LiteDBも不要で。
+Syslog送信失敗時は、おとなしくロストで
+
+ログローテーションも考慮すること。

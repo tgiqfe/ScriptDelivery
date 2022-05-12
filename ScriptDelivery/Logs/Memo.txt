@@ -1,0 +1,6 @@
+﻿LogBody, Loggerをここに実装する
+
+- ローカルファイル
+- Logstash
+- Syslog
+- 通信失敗時用LiteDB

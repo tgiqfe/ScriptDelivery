@@ -14,20 +14,23 @@ namespace ScriptDelivery.Net
         {
             _list = new List<DownloadFile>();
             _filesPath = filesPath;
-            foreach (string file in Directory.GetFiles(filesPath))
+            if (Directory.Exists(_filesPath))
             {
-                _list.Add(new DownloadFile(filesPath, file));
+                foreach (string file in Directory.GetFiles(filesPath))
+                {
+                    _list.Add(new DownloadFile(filesPath, file));
+                }
             }
         }
 
         /// <summary>
         /// 受け取ったDownloadFileリストから、ダウンロード可否を確認
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="reqList"></param>
         /// <returns></returns>
-        public void GetResponse(List<DownloadFile> list)
+        public void GetResponse(List<DownloadFile> reqList)
         {
-            list.ForEach(x =>
+            reqList.ForEach(x =>
             {
                 var dlFile = _list.FirstOrDefault(y => y.Name == x.Name);
                 if(dlFile != null)
@@ -50,7 +53,6 @@ namespace ScriptDelivery.Net
                 _list.Add(new DownloadFile(_filesPath, file));
             }
         }
-
     }
 }
 
