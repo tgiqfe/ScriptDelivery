@@ -18,11 +18,21 @@ namespace ScriptDelivery.Net
         public List<string> SmbDownloadList { get; set; }
         public List<DownloadFile> HttpDownloadList { get; set; }
 
+
+        private JsonSerializerOptions options = new System.Text.Json.JsonSerializerOptions()
+        {
+            IgnoreReadOnlyProperties = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        };
+
+
+
         public async void DownloadMappingFile(string server)
         {
             using (var client = new HttpClient())
+            using (var content = new StringContent(""))
+            using (var response = await client.PostAsync(server + "/map", content))
             {
-                var response = await client.PostAsync(server + "/map", new StringContent(""));
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string json = await response.Content.ReadAsStringAsync();
@@ -33,9 +43,31 @@ namespace ScriptDelivery.Net
 
         public void MapMathcingCheck()
         {
+            Func<RequireRule[], RequireMode, bool> checkRequire = (rules, mode) =>
+            {
+                if (mode == RequireMode.None)
+                {
+                    //  ReuqieModeがNoneの場合は、チェック無しにtrue
+                    return true;
+                }
+                var results = rules.ToList().Select(x =>
+                {
+                    MatcherBase matcher = MatcherBase.Get(x.GetRuleTarget());
+                    matcher.SetParam(x.Param);
+                    return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
+                });
+
+                return mode switch
+                {
+                    RequireMode.And => results.All(x => x),
+                    RequireMode.Or => results.Any(x => x),
+                    _ => false,
+                };
+            };
+
             MappingList = MappingList.Where(x =>
             {
-                return CheckRequire(x.Require.RequireRules, x.Require.GetRequireMode());
+                return checkRequire(x.Require.RequireRules, x.Require.GetRequireMode());
             }).ToList();
 
             this.SmbDownloadList = new List<string>();
@@ -57,11 +89,11 @@ namespace ScriptDelivery.Net
                         {
                             Name = x.SourcePath,
                             DestinationPath = x.DestinationPath,
+                            Overwrite = x.GetForce(),
                         });
                     }
                 });
             }
-
         }
 
         public void DownloadSmbFile()
@@ -69,47 +101,45 @@ namespace ScriptDelivery.Net
 
         }
 
-        public async Task DownloadHttpFile(string server)
+        public async Task DownloadHttpSearch(string server)
+        {
+            using (var client = new HttpClient())
+            using (var content = new StringContent(
+                 JsonSerializer.Serialize(HttpDownloadList, options), Encoding.UTF8, "application/json"))
+            using (var response = await client.PostAsync(server + "/download/list", content))
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+            }
+        }
+
+        public async Task DownloadHttpStart(string server)
         {
             using (var client = new HttpClient())
             {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(HttpDownloadList),
-                    Encoding.UTF8,
-                    "application/json");
-                var response = await client.PostAsync(server + "/download/list", content);
-                string json = await response.Content.ReadAsStringAsync();
+                foreach (var dlFile in HttpDownloadList)
+                {
+                    //  ローカル側のファイルとの一致チェック
+                    if (!(dlFile.Downloadable ?? false)) { continue; }
+                    if (dlFile.CompareFile(dlFile.DestinationPath) && !(dlFile.Overwrite ?? false))
+                    {
+                        continue;
+                    }
 
-                List<DownloadFile> tempList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
-
-
+                    string fileName = dlFile.Name.Replace("\\", "/");
+                    using (var response = await client.GetAsync(server + "/download/files/" + dlFile.Name))
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            using (var stream = await response.Content.ReadAsStreamAsync())
+                            using (var fs = new FileStream(dlFile.DestinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            {
+                                stream.CopyTo(fs);
+                            }
+                        }
+                    }
+                }
             }
         }
-
-
-
-
-        private bool CheckRequire(RequireRule[] rules, RequireMode mode)
-        {
-            if (mode == RequireMode.None)
-            {
-                //  ReuqieModeがNoneの場合は、チェック無しにtrue
-                return true;
-            }
-            var results = rules.ToList().Select(x =>
-            {
-                MatcherBase matcher = MatcherBase.Get(x.GetRuleTarget());
-                matcher.SetParam(x.Param);
-                return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
-            });
-
-            return mode switch
-            {
-                RequireMode.And => results.All(x => x),
-                RequireMode.Or => results.Any(x => x),
-                _ => false,
-            };
-        }
-
     }
 }

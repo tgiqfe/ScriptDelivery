@@ -22,27 +22,24 @@ namespace ScriptDelivery.Net
             }
         }
 
-        public IEnumerable<DownloadFile> GetResponse(List<string> reqList)
-        {
-            return _list.Where(x => reqList.Any(y => x.Name == y));
-        }
-
         /// <summary>
-        /// (クライアント側処理)
-        /// DownloadFileの有無チェック
+        /// 受け取ったDownloadFileリストから、ダウンロード可否を確認
         /// </summary>
+        /// <param name="list"></param>
         /// <returns></returns>
-        public List<string> CheckLocalFile()
+        public void GetResponse(List<DownloadFile> list)
         {
-            foreach (var file in _list)
+            list.ForEach(x =>
             {
-                string path = Path.GetRelativePath(_filesPath, file.Name);
-                bool isMatch = file.CompareFile(path);
-
-            }
-            return null;
+                var dlFile = _list.FirstOrDefault(y => y.Name == x.Name);
+                if(dlFile != null)
+                {
+                    x.Downloadable = true;
+                    x.LastWriteTime = dlFile.LastWriteTime;
+                    x.Hash = dlFile.Hash;
+                }
+            });
         }
-
 
         /// <summary>
         /// (サーバ側処理)

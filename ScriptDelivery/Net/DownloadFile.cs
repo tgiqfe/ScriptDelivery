@@ -14,6 +14,8 @@ namespace ScriptDelivery.Net
         public string Hash { get; set; }
 
         public string DestinationPath { get; set; }
+        public bool? Overwrite { get; set; }
+        public bool? Downloadable { get; set; }
 
         public DownloadFile() { }
         public DownloadFile(string basePath, string filePath)
@@ -49,7 +51,7 @@ namespace ScriptDelivery.Net
         /// <returns></returns>
         public bool CompareFile(string path)
         {
-            return File.Exists(path) && 
+            return File.Exists(path) &&
                 (File.GetLastWriteTime(path) == this.LastWriteTime) &&
                 (GetHash(path) == this.Hash);
         }

@@ -22,13 +22,19 @@ app.MapPost("/map", () =>
     return Item.MappingFileCollection.Content;
 });
 
+var options = new System.Text.Json.JsonSerializerOptions()
+{
+    IgnoreReadOnlyProperties = true,
+    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+};
+
 app.MapPost("/download/list", async (HttpContext context) =>
 {
     if (context.Request.HasJsonContentType())
     {
-        List<string> fileReq = await context.Request.ReadFromJsonAsync<List<string>>();
-        IEnumerable<DownloadFile> fileRes = Item.DownloadFileCollection.GetResponse(fileReq);
-        await context.Response.WriteAsJsonAsync(fileRes);
+        List<DownloadFile> dlFileList = await context.Request.ReadFromJsonAsync<List<DownloadFile>>();
+        Item.DownloadFileCollection.GetResponse(dlFileList);
+        await context.Response.WriteAsJsonAsync(dlFileList, options);
     }
 });
 
