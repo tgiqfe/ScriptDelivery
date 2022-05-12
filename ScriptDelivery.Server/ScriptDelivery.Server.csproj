@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Logs\ServerLog\" />
     <Folder Include="ScriptDelivery\Requires\" />
     <Folder Include="ScriptDelivery\Works\" />
     <Folder Include="nginx_conf\conf.d\" />

@@ -11,7 +11,43 @@ namespace ScriptDelivery.Server
         public string MapsPath { get; set; }
         public string FilesPath { get; set; }
 
+        public ParamSyslog Syslog { get; set; }
 
+        #region Syslog
+
+        public class ParamSyslog
+        {
+            /// <summary>
+            /// ログ転送先サーバ(Syslog)のサーバ
+            /// 記述例⇒udp://192.168.10.100:514
+            /// </summary>
+            public string Server { get; set; }
+            public string Facility { get; set; }
+            public string Format { get; set; }
+            public bool? SslEncrypt { get; set; }
+            public int? SslTimeout { get; set; }
+            public string SslCertFile { get; set; }
+            public string SslCertPassword { get; set; }
+            public string SslCertFriendryName { get; set; }
+            public bool? SslIgnoreCheck { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format(
+                    "[ Server={0} Facility={1} Format={2} SslEncrypt={3} SslTimeout={4} SslCertFile={5} SslCertPassword={6} SslCertFriendryName={7} SslIgnoreCheck={8} ]",
+                    this.Server,
+                    this.Facility,
+                    this.Format,
+                    this.SslEncrypt,
+                    this.SslTimeout,
+                    this.SslCertFile,
+                    this.SslCertPassword,
+                    this.SslCertFriendryName,
+                    this.SslIgnoreCheck);
+            }
+        }
+
+        #endregion
 
         public void Init()
         {
