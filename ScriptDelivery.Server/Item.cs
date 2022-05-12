@@ -8,7 +8,7 @@ using ScriptDelivery.Net;
 /// <summary>
 /// 静的パラメータを格納
 /// </summary>
-namespace ScriptDelivery.Server.ServerLib
+namespace ScriptDelivery.Server
 {
     internal class Item
     {

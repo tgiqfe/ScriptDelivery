@@ -5,6 +5,9 @@ using System.IO;
 
 namespace ScriptDelivery.Net
 {
+    /// <summary>
+    /// サーバ側でのみ使用。Mappingファイルの情報を格納
+    /// </summary>
     internal class MappingFile
     {
         public string Path { get; set; }
@@ -26,7 +29,7 @@ namespace ScriptDelivery.Net
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        protected string GetHash(string filePath)
+        private string GetHash(string filePath)
         {
             string ret = null;
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

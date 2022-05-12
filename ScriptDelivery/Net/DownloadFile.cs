@@ -5,18 +5,22 @@ using System.Text.Json.Serialization;
 
 namespace ScriptDelivery.Net
 {
+    /// <summary>
+    /// ダウンロードファイルについての情報を格納
+    /// サーバ側/クライアント側の両方で使用。
+    /// </summary>
     public class DownloadFile
     {
         [JsonIgnore]
-        public string Path { get; set; }
-        public string Name { get; set; }
-        public DateTime LastWriteTime { get; set; }
-        public string Hash { get; set; }
+        public string Path { get; set; }            //  サーバ側でのみ使用する
+        public string Name { get; set; }            //  サーバ側の、Setting.FilesPathからの相対パス。大文字/小文字は区別
+        public DateTime LastWriteTime { get; set; } //  サーバ側のファイルの更新日時
+        public string Hash { get; set; }            //  サーバ側のファイルのMD5ハッシュ値
+        public bool? Downloadable { get; set; }     //  サーバ側に対象のファイルが存在し、ダウンロードが可能かどうか
 
-        public string DestinationPath { get; set; }
-        public bool? Overwrite { get; set; }
-        public bool? Downloadable { get; set; }
-
+        public string DestinationPath { get; set; } //  クライアント側のファイルのダウンロード先ファイル名。フォルダー名指定は非対応
+        public bool? Overwrite { get; set; }        //  クライアント側で上書き保存を許可するかどうか
+        
         public DownloadFile() { }
         public DownloadFile(string basePath, string filePath)
         {
@@ -31,7 +35,7 @@ namespace ScriptDelivery.Net
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        protected string GetHash(string filePath)
+        private string GetHash(string filePath)
         {
             string ret = null;
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

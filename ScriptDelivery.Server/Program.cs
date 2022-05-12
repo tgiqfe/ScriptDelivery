@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-using ScriptDelivery.Server.ServerLib;
+using ScriptDelivery.Server;
 using ScriptDelivery.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +8,14 @@ var app = builder.Build();
 
 var options = new System.Text.Json.JsonSerializerOptions()
 {
+    //Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     IgnoreReadOnlyProperties = true,
     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+    //WriteIndented = true,
+    //Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
 };
+
+#region Routing
 
 app.MapGet("/", () => "");
 
@@ -39,6 +44,7 @@ app.MapGet("/download/files", async (HttpContext context) =>
     await context.Response.SendFileAsync(filePath);
 });
 
+#endregion
 
 var worker = new SessionWorker();
 worker.OnStart();

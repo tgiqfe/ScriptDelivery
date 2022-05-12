@@ -1,4 +1,4 @@
-﻿namespace ScriptDelivery.Server.ServerLib
+﻿namespace ScriptDelivery.Server
 {
     internal enum Platform
     {

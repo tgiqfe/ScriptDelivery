@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using ScriptDelivery.Net;
 
-namespace ScriptDelivery.Server.ServerLib
+namespace ScriptDelivery.Server
 {
     public class SessionWorker
     {

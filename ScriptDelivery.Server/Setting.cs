@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace ScriptDelivery.Server.ServerLib
+namespace ScriptDelivery.Server
 {
     public class Setting
     {
