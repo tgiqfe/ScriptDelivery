@@ -16,7 +16,9 @@ if (debug)
 }
 
 
-using (var session = new ClientSession("http://localhost:5160"))
+ProcessLogger logger = new ProcessLogger("sd.log");
+
+using (var session = new ClientSession("http://localhost:5160", logger))
 {
     session.DownloadMappingFile().Wait();
     session.MapMathcingCheck();

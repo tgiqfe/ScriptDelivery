@@ -19,18 +19,20 @@ namespace ScriptDelivery
         public List<DownloadFile> HttpDownloadList { get; set; }
 
         private HttpClient _client = null;
-
+        
         private string _server = null;
+        private ProcessLogger _logger = null;
 
         private JsonSerializerOptions _options = null;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ClientSession(string server)
+        public ClientSession(string server, ProcessLogger logger)
         {
             this._client = new HttpClient();
             this._server = server;
+            this._logger = logger;
             this._options = new System.Text.Json.JsonSerializerOptions()
             {
                 //Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -39,7 +41,7 @@ namespace ScriptDelivery
                 //WriteIndented = true,
                 //Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
-            //  ●[log]接続先サーバの情報
+            _logger.Write(LogLevel.Info, "Connect server => {0}", _server);
         }
 
         /// <summary>
@@ -48,7 +50,7 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadMappingFile()
         {
-            //  ●[log]Init接続。Mappingファイルの要求
+            _logger.Write(LogLevel.Debug, "ScriptDelivery init.");
             using (var content = new StringContent(""))
             using (var response = await _client.PostAsync(_server + "/map", content))
             {
@@ -56,11 +58,11 @@ namespace ScriptDelivery
                 {
                     string json = await response.Content.ReadAsStringAsync();
                     this.MappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
-                    //  ●[log]接続成功。Mappingファイル取得
+                    _logger.Write(LogLevel.Info, "Success, download mapping object.");
                 }
                 else
                 {
-                    //  ●[log]Mappingファイル取得失敗
+                    _logger.Write(LogLevel.Error, "Failed, download mapping object.");
                 }
             }
         }
@@ -70,7 +72,7 @@ namespace ScriptDelivery
         /// </summary>
         public void MapMathcingCheck()
         {
-            //  ●[log]Mappingファイルの中のRequireチェック
+            _logger.Write(LogLevel.Debug, "Check, mapping object.");
 
             MappingList = MappingList.Where(x =>
             {
@@ -82,8 +84,9 @@ namespace ScriptDelivery
                 IEnumerable<bool> results = x.Require.RequireRules.Select(x =>
                 {
                     MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
+                    matcher.SetLogger(_logger);
                     matcher.SetParam(x.Param);
-                    return matcher.CheckParam() && matcher.IsMatch(x.GetMatchType());
+                    return (matcher.CheckParam() ^ x.GetInvert()) && matcher.IsMatch(x.GetMatchType());
                 });
                 return mode switch
                 {
@@ -93,8 +96,7 @@ namespace ScriptDelivery
                 };
             }).ToList();
 
-            //  ●[log]Requireチェック完了。Match: {MappingList.Length}件
-
+            _logger.Write(LogLevel.Debug, null, "Finish, require check [Match => {0} count]", MappingList.Count);
             this.SmbDownloadList = new List<string>();
             this.HttpDownloadList = new List<DownloadFile>();
 
@@ -126,6 +128,8 @@ namespace ScriptDelivery
         /// </summary>
         public void DownloadSmbFile()
         {
+            _logger.Write(LogLevel.Debug, "Search, download file from SMB server.");
+
             if (SmbDownloadList?.Count > 0) { }
         }
 
@@ -135,7 +139,7 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadHttpSearch()
         {
-            //  ●[log]Http Downloadファイル確認をサーバに送信
+            _logger.Write(LogLevel.Debug, "Search, download file from ScriptDelivery server.");
 
             if (HttpDownloadList?.Count > 0)
             {
@@ -147,11 +151,12 @@ namespace ScriptDelivery
                     {
                         string json = await response.Content.ReadAsStringAsync();
                         HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
-                        //  ●[log]接続成功。Downloadファイルリスト取得
+
+                        _logger.Write(LogLevel.Info, "Success, download DownloadFile list object");
                     }
                     else
                     {
-                        //  ●[log]Downloadファイルリスト取得に失敗
+                        _logger.Write(LogLevel.Error, "Failed, download DownloadFile list object");
                     }
                 }
             }
@@ -163,7 +168,7 @@ namespace ScriptDelivery
         /// <returns></returns>
         public async Task DownloadHttpStart()
         {
-            //  ●[log]Http Downloadファイルを要求
+            _logger.Write(LogLevel.Debug, "Start, Http download.");
 
             if (HttpDownloadList?.Count > 0)
             {
@@ -190,11 +195,12 @@ namespace ScriptDelivery
                             {
                                 stream.CopyTo(fs);
                             }
-                            //  ●[log]Http Download完了。Path: {dlFile.DestinationPath}
+                            
+                            _logger.Write(LogLevel.Info, "Success, file download. [{0}]", dlFile.DestinationPath);
                         }
                         else
                         {
-                            //  ●[log]ファイルのダウンロードに失敗。Path: {dlFile.Destination}
+                            _logger.Write(LogLevel.Info, "Failed, file download. [{0}]", dlFile.DestinationPath);
                         }
                     }
                 }

@@ -19,13 +19,17 @@ namespace ScriptDelivery.Requires.Matcher
 
         public override bool IsMatch(MatchType matchType)
         {
-            return matchType switch
+            bool ret = matchType switch
             {
                 MatchType.File => FileMatch(),
                 MatchType.Directory => DirectoryMatch(),
                 MatchType.Registry => RegistryMatch(),
                 _ => false,
             };
+
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+
+            return ret;
         }
 
         #region Match methods

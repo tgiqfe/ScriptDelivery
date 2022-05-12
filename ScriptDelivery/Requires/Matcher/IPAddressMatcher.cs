@@ -38,13 +38,17 @@ namespace ScriptDelivery.Requires.Matcher
         {
             _info ??= new NetworkInfo();
 
-            return matchType switch
+            bool ret = matchType switch
             {
                 MatchType.Equal => EqualMatch(),
                 MatchType.Range => RangeMatch(),
                 MatchType.InNetwork => InNetworkMatch(),
                 _ => false,
             };
+
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+
+            return ret;
         }
 
         #region Match methods

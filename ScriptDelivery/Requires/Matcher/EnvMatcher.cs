@@ -34,11 +34,15 @@ namespace ScriptDelivery.Requires.Matcher
         {
             this.Location ??= EnvLocation.All;
 
-            return matchType switch
+            bool ret =  matchType switch
             {
                 MatchType.Equal => EqualMatch(),
                 _ => false,
             };
+
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+
+            return ret;
         }
 
         #region Match methods

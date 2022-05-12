@@ -27,13 +27,17 @@ namespace ScriptDelivery.Requires.Matcher
 
         public override bool IsMatch(MatchType matchType)
         {
-            return matchType switch
+            bool ret = matchType switch
             {
                 MatchType.Equal => EqualMatch(),
                 MatchType.Range => RangeMatch(),
                 MatchType.NameRange => NameRangeMatch(),
                 _ => false,
             };
+
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+
+            return ret;
         }
 
         #region Match methods
@@ -47,7 +51,6 @@ namespace ScriptDelivery.Requires.Matcher
             if (Name.Contains("*"))
             {
                 return this.Name.GetWildcardPattern().IsMatch(Environment.MachineName);
-                //return Environment.MachineName.IsLike(this.Name);
             }
             return Environment.MachineName.Equals(Name, StringComparison.OrdinalIgnoreCase);
         }
