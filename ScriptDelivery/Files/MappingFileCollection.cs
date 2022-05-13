@@ -12,6 +12,7 @@ namespace ScriptDelivery.Files
     {
         private List<MappingFile> _list = null;
 
+        private string _baseDir = null;
 
         public string Content { get; set; }
 
@@ -19,25 +20,33 @@ namespace ScriptDelivery.Files
 
         public MappingFileCollection(string mapsPath)
         {
+            _baseDir = mapsPath;
+            CheckSource();
+        }
+
+        public void CheckSource()
+        {
             _list = new List<MappingFile>();
-            if (Directory.Exists(mapsPath))
+            if (Directory.Exists(_baseDir))
             {
-                foreach (string file in Directory.GetFiles(mapsPath))
+                foreach (string file in Directory.GetFiles(_baseDir))
                 {
-                    _list.Add(new MappingFile(file));
+                    _list.Add(new MappingFile(_baseDir, file));
                 }
             }
 
             var list = _list.SelectMany(x => x.MappingList.Select(y => y)).ToList();
             this.Content = JsonSerializer.Serialize(list);
+
+            Item.Logger.Write(Logs.LogLevel.Info, null, "MapFileList", "MapFiles => [{0}]",
+                string.Join(", ", _list.Select(x => x.Name)));
         }
 
+        /*
         public void ContentToList(string content)
         {
             _list = JsonSerializer.Deserialize<List<MappingFile>>(content);
         }
-
-
-
+        */
     }
 }

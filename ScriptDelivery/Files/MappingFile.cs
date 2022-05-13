@@ -12,14 +12,16 @@ namespace ScriptDelivery.Files
     internal class MappingFile
     {
         public string Path { get; set; }
+        public string Name { get; set; }
         public DateTime LastWriteTime { get; set; }
         public string Hash { get; set; }
         public List<Mapping> MappingList { get; set; }
 
         public MappingFile() { }
-        public MappingFile(string filePath)
+        public MappingFile(string basePath, string filePath)
         {
             this.Path = filePath;
+            this.Name = System.IO.Path.GetRelativePath(basePath, filePath);
             this.LastWriteTime = File.GetLastWriteTime(filePath);
             this.Hash = GetHash(filePath);
             this.MappingList = MappingGenerator.Deserialize(filePath);

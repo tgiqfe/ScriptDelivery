@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ScriptDelivery.Logs;
 
 namespace ScriptDelivery.Files
 {
@@ -6,21 +7,29 @@ namespace ScriptDelivery.Files
     {
         private List<DownloadFile> _list = null;
 
-        private string _filesPath = null;
+        private string _baseDir = null;
 
         public DownloadFileCollection() { }
 
         public DownloadFileCollection(string filesPath)
         {
+            _baseDir = filesPath;
+            CheckSource();
+        }
+
+        public void CheckSource()
+        {
             _list = new List<DownloadFile>();
-            _filesPath = filesPath;
-            if (Directory.Exists(_filesPath))
+            if (Directory.Exists(_baseDir))
             {
-                foreach (string file in Directory.GetFiles(filesPath))
+                foreach (string file in Directory.GetFiles(_baseDir, "*", SearchOption.AllDirectories))
                 {
-                    _list.Add(new DownloadFile(filesPath, file));
+                    _list.Add(new DownloadFile(_baseDir, file));
                 }
             }
+
+            Item.Logger.Write(ScriptDelivery.Logs.LogLevel.Info, null, "DownloadFileList", "DownloadFiles => [{0}]",
+                string.Join(", ", _list.Select(x => x.Name)));
         }
 
         /// <summary>
@@ -28,7 +37,7 @@ namespace ScriptDelivery.Files
         /// </summary>
         /// <param name="reqList"></param>
         /// <returns></returns>
-        public void GetResponse(List<DownloadFile> reqList)
+        public void RequestToResponse(List<DownloadFile> reqList)
         {
             reqList.ForEach(x =>
             {
@@ -40,18 +49,6 @@ namespace ScriptDelivery.Files
                     x.Hash = dlFile.Hash;
                 }
             });
-        }
-
-        /// <summary>
-        /// DownloadFileの変更/追加/削除チェック
-        /// </summary>
-        public void RecheckSource()
-        {
-            _list.Clear();
-            foreach (string file in Directory.GetFiles(_filesPath))
-            {
-                _list.Add(new DownloadFile(_filesPath, file));
-            }
         }
     }
 }

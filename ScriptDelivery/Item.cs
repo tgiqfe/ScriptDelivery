@@ -4,6 +4,7 @@ using ScriptDelivery;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using ScriptDelivery.Files;
+using ScriptDelivery.Logs;
 
 /// <summary>
 /// 静的パラメータを格納
@@ -69,5 +70,15 @@ namespace ScriptDelivery
         /// ダウンロード対象ファイルのリスト
         /// </summary>
         public static DownloadFileCollection DownloadFileCollection { get; set; }
+
+        /// <summary>
+        /// ログ出力用
+        /// </summary>
+        public static ServerLogger Logger { get; set; }
+
+        /// <summary>
+        /// アプリケーションの現在のバージョン
+        /// </summary>
+        public static string CurrentVersion { get; set; }
     }
 }

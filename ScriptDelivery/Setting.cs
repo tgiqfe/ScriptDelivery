@@ -56,6 +56,20 @@ namespace ScriptDelivery
         {
             this.MapsPath = "store/maps";
             this.FilesPath = "store/files";
+            this.LogsPath = "logs";
+            this.MinLogLevel = "info";
+            this.Syslog = new ParamSyslog()
+            {
+                Server = null,
+                Facility = "user",
+                Format = "RFC3164",
+                SslEncrypt = false,
+                SslTimeout = 3000,
+                SslCertFile = null,
+                SslCertPassword = null,
+                SslCertFriendryName = null,
+                SslIgnoreCheck = false
+            };
         }
 
         public void ChangePath()

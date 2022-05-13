@@ -40,7 +40,7 @@ namespace ScriptDelivery.Logs
 
         #region Log output
 
-        public void Write(LogLevel level, string clientIP, int clientPort, string title, string message)
+        public void Write(LogLevel level, string address, string title, string message)
         {
             if (level >= _minLogLevel)
             {
@@ -48,17 +48,21 @@ namespace ScriptDelivery.Logs
                 {
                     Date = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"),
                     Level = level,
-                    ClientIP = clientIP,
-                    ClientPort = clientPort,
+                    ClientAddress = address,
                     Title = title,
                     Message = message,
                 }).ConfigureAwait(false);
             }
         }
 
+        public void Write(LogLevel level, string address, string title, string format, params string[] args)
+        {
+            Write(level, address, title, string.Format(format, args));
+        }
+
         public void Write(string message)
         {
-            Write(LogLevel.Info, clientIP: null, clientPort: 0, title: "", message);
+            Write(LogLevel.Info, address: null, title: "", message);
         }
 
         #endregion
@@ -69,9 +73,16 @@ namespace ScriptDelivery.Logs
             {
                 _rwLock.AcquireWriterLock(10000);
 
-                string json = body.GetJson();
+                //  コンソール出力
+                Console.WriteLine("[{0}][{1}] Client:{2} Title:{3} Message:{4}",
+                    body.Date,
+                    body.Level,
+                    body.ClientAddress,
+                    body.Title,
+                    body.Message);
 
                 //  ファイル書き込み
+                string json = body.GetJson();
                 await _writer.WriteLineAsync(json);
 
                 //  Syslog転送
