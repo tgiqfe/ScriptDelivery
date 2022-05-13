@@ -25,7 +25,7 @@ namespace ScriptDelivery.Maps
             {
                 Require.GetRequireMode().ToString(),
                 Require.RequireRules[0].GetRuleTarget().ToString(),
-                Require.RequireRules[0].GetMatchType().ToString(),
+                Require.RequireRules[0].GetRuleMatch().ToString(),
                 Require.RequireRules[0].GetInvert().ToString(),
                 Require.RequireRules?.Length > 0 ?
                     string.Join(" ", Require.RequireRules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",

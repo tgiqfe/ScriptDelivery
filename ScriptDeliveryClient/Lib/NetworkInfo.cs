@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 
 namespace ScriptDeliveryClient.Lib
 {
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class NetworkInfo
     {
         #region Private class

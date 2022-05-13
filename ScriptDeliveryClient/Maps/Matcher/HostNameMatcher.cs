@@ -17,7 +17,6 @@ namespace ScriptDeliveryClient.Maps.Matcher
     /// - NameRange : ホスト名末尾の数字部分を使用しての範囲判定。数字部分以外も含めて判定。
     /// 末尾が数字以外の場合、数字より後は無視
     /// </summary>
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class HostNameMatcher : MatcherBase
     {
         [MatcherParameter(Mandatory = true), Keys("Name")]
@@ -29,17 +28,17 @@ namespace ScriptDeliveryClient.Maps.Matcher
         [MatcherParameter, Keys("End")]
         public string EndName { get; set; }
 
-        public override bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType)
+        public override bool IsMatch(RuleMatch ruleMatch)
         {
-            bool ret = matchType switch
+            bool ret = ruleMatch switch
             {
-                ScriptDelivery.Maps.Requires.MatchType.Equal => EqualMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.Range => RangeMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.NameRange => NameRangeMatch(),
+                RuleMatch.Equal => EqualMatch(),
+                RuleMatch.Range => RangeMatch(),
+                RuleMatch.NameRange => NameRangeMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

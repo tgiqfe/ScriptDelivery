@@ -12,7 +12,6 @@ using ScriptDelivery;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class ExistsMatcher : MatcherBase
     {
         [MatcherParameter(Mandatory = true, Expand = true), Keys("Path", "RegistryKey")]
@@ -21,17 +20,17 @@ namespace ScriptDeliveryClient.Maps.Matcher
         [MatcherParameter, Keys("Name", "RegistryName")]
         public string Name { get; set; }
 
-        public override bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType)
+        public override bool IsMatch(RuleMatch ruleMatch)
         {
-            bool ret = matchType switch
+            bool ret = ruleMatch switch
             {
-                ScriptDelivery.Maps.Requires.MatchType.File => FileMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.Directory => DirectoryMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.Registry => RegistryMatch(),
+                RuleMatch.File => FileMatch(),
+                RuleMatch.Directory => DirectoryMatch(),
+                RuleMatch.Registry => RegistryMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

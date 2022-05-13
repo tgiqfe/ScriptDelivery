@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -10,10 +10,10 @@
     <Compile Include="..\ScriptDelivery\Files\DownloadFile.cs" Link="Files\DownloadFile.cs" />
     <Compile Include="..\ScriptDelivery\Maps\KeysAttribute.cs" Link="Maps\KeysAttribute.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Mapping.cs" Link="Maps\Mapping.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\MatchType.cs" Link="Maps\Requires\MatchType.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Requires\Require.cs" Link="Maps\Requires\Require.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Requires\RequireMode.cs" Link="Maps\Requires\RequireMode.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Requires\RequireRule.cs" Link="Maps\Requires\RequireRule.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\RuleMatch.cs" Link="Maps\Requires\RuleMatch.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Requires\RuleTarget.cs" Link="Maps\Requires\RuleTarget.cs" />
     <Compile Include="..\ScriptDelivery\Maps\SubCandidate.cs" Link="Maps\SubCandidate.cs" />
     <Compile Include="..\ScriptDelivery\Maps\ValuesAttribute.cs" Link="Maps\ValuesAttribute.cs" />

@@ -12,7 +12,6 @@ using ScriptDelivery.Maps;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class MatcherBase
     {
         public static MatcherBase Activate(RuleTarget target)
@@ -246,6 +245,6 @@ namespace ScriptDeliveryClient.Maps.Matcher
             return text;
         }
 
-        public virtual bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType) { return false; }
+        public virtual bool IsMatch(RuleMatch matchType) { return false; }
     }
 }

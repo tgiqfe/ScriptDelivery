@@ -133,7 +133,7 @@ namespace ScriptDelivery.Maps
 
                 mapping.Require.RequireRules = new RequireRule[1] { new RequireRule() };
                 mapping.Require.RequireRules[0].RuleTarget = line["Target"];
-                mapping.Require.RequireRules[0].MatchType = line["Match"];
+                mapping.Require.RequireRules[0].RuleMatch = line["Match"];
                 mapping.Require.RequireRules[0].Invert = line["Invert"];
 
                 var dictionary = new Dictionary<string, string>();

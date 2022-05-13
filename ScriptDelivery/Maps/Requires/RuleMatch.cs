@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScriptDelivery.Maps.Requires
 {
-    internal enum MatchType
+    internal enum RuleMatch
     {
         None,           //  マッチ条件無し。
         Equal,          //  完全一致判定、ワイルドカードを使用してContains,StartsWith,EndsWith

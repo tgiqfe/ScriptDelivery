@@ -15,7 +15,6 @@ namespace ScriptDeliveryClient.Maps.Matcher
     /// レジストリのマッチ確認
     /// - Equal    : 完全一致判定。ワイルドカード判定は無し
     /// </summary>
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class RegistryMatcher : MatcherBase
     {
         [MatcherParameter(Mandatory = true), Keys("Path", "RegistryKey")]
@@ -33,15 +32,15 @@ namespace ScriptDeliveryClient.Maps.Matcher
         [MatcherParameter, Keys("NoExpand")]
         public bool? NoExpand { get; set; }
 
-        public override bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType)
+        public override bool IsMatch(RuleMatch ruleMatch)
         {
-            bool ret = matchType switch
+            bool ret = ruleMatch switch
             {
-                ScriptDelivery.Maps.Requires.MatchType.Equal => EqualMatch(),
+                RuleMatch.Equal => EqualMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

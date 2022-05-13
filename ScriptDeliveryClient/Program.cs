@@ -26,5 +26,3 @@ using (var session = new ClientSession("http://localhost:5160", logger))
     session.DownloadHttpStart().Wait();
 }
 
-
-

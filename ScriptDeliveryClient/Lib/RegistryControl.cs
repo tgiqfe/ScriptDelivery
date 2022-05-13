@@ -11,7 +11,6 @@ using Microsoft.Win32;
 
 namespace ScriptDeliveryClient.Lib
 {
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class RegistryControl
     {
         /// <summary>

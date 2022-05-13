@@ -14,7 +14,6 @@ namespace ScriptDeliveryClient.Maps.Matcher
     /// 環境変数のマッチ確認
     /// - Equal    : 完全一致
     /// </summary>
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class EnvMatcher : MatcherBase
     {
         [MatcherParameter(Mandatory = true), Keys("Name", "Key")]
@@ -34,17 +33,17 @@ namespace ScriptDeliveryClient.Maps.Matcher
             Machine = 3
         }
 
-        public override bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType)
+        public override bool IsMatch(RuleMatch ruleMatch)
         {
             this.Location ??= EnvLocation.All;
 
-            bool ret =  matchType switch
+            bool ret =  ruleMatch switch
             {
-                ScriptDelivery.Maps.Requires.MatchType.Equal => EqualMatch(),
+                RuleMatch.Equal => EqualMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

@@ -12,7 +12,6 @@ using ScriptDelivery.Files;
 
 namespace ScriptDelivery
 {
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class ClientSession : IDisposable
     {
         public List<Mapping> MappingList { get; set; }
@@ -87,7 +86,7 @@ namespace ScriptDelivery
                     MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
                     matcher.SetLogger(_logger);
                     matcher.SetParam(x.Param);
-                    return (matcher.CheckParam() ^ x.GetInvert()) && matcher.IsMatch(x.GetMatchType());
+                    return (matcher.CheckParam() ^ x.GetInvert()) && matcher.IsMatch(x.GetRuleMatch());
                 });
                 return mode switch
                 {

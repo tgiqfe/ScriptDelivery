@@ -18,7 +18,6 @@ namespace ScriptDeliveryClient.Maps.Matcher
     /// - Range     : IPv4アドレスで、第四オクテットのみ範囲確認
     /// - InNetwork : IPv4アドレスで、指定のネットワークアドレスに所属しているかどうかの確認
     /// </summary>
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     internal class IPAddressMatcher : MatcherBase
     {
         [MatcherParameter, Keys("IPAddress")]
@@ -38,19 +37,19 @@ namespace ScriptDeliveryClient.Maps.Matcher
 
         private static NetworkInfo _info = null;
 
-        public override bool IsMatch(ScriptDelivery.Maps.Requires.MatchType matchType)
+        public override bool IsMatch(RuleMatch ruleMatch)
         {
             _info ??= new NetworkInfo();
 
-            bool ret = matchType switch
+            bool ret = ruleMatch switch
             {
-                ScriptDelivery.Maps.Requires.MatchType.Equal => EqualMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.Range => RangeMatch(),
-                ScriptDelivery.Maps.Requires.MatchType.InNetwork => InNetworkMatch(),
+                RuleMatch.Equal => EqualMatch(),
+                RuleMatch.Range => RangeMatch(),
+                RuleMatch.InNetwork => InNetworkMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {matchType}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

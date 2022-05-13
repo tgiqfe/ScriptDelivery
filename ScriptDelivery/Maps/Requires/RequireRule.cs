@@ -14,7 +14,7 @@ namespace ScriptDelivery.Maps.Requires
         public string RuleTarget { get; set; }
 
         [YamlMember(Alias = "match"), Values("Match")]
-        public string MatchType { get; set; }
+        public string RuleMatch { get; set; }
 
         [YamlMember(Alias = "invert")]
         public string Invert { get; set; }
@@ -29,10 +29,10 @@ namespace ScriptDelivery.Maps.Requires
                 this.GetType().GetProperty("RuleTarget"), this.RuleTarget);
         }
 
-        public MatchType GetMatchType()
+        public RuleMatch GetRuleMatch()
         {
-            return ValuesAttribute.GetEnumValue<MatchType>(
-                this.GetType().GetProperty("MatchType"), this.MatchType);
+            return ValuesAttribute.GetEnumValue<RuleMatch>(
+                this.GetType().GetProperty("RuleMatch"), this.RuleMatch);
         }
 
         public bool GetInvert()
