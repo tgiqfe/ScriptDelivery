@@ -14,7 +14,7 @@ namespace ScriptDelivery.Server.Logs
         /// LiteDBに格納時にユニークキーとして使用
         /// </summary>
         [JsonIgnore]
-        //[LiteDB.BsonId]
+        [LiteDB.BsonId]
         public string Serial { get; set; }
 
         #region Public parameter
@@ -47,7 +47,7 @@ namespace ScriptDelivery.Server.Logs
             }
             if (ignoreNull)
             {
-                options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
             }
             if (writeIndented)
             {
@@ -58,7 +58,5 @@ namespace ScriptDelivery.Server.Logs
         }
 
         public virtual string GetJson() { return ""; }
-
-
     }
 }

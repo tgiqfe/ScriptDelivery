@@ -11,6 +11,9 @@ namespace ScriptDelivery.Server
         public string MapsPath { get; set; }
         public string FilesPath { get; set; }
 
+        public string LogsPath { get; set; }
+        public string MinLogLevel { get; set; }
+
         public ParamSyslog Syslog { get; set; }
 
         #region Syslog
@@ -71,6 +74,22 @@ namespace ScriptDelivery.Server
             }
         }
 
+        public string GetLogsPath()
+        {
+            return string.IsNullOrEmpty(this.LogsPath) ?
+                Path.Combine(Item.ExecDirectoryPath, "Logs") :
+                ExpandEnvironment(this.LogsPath);
+        }
+
+        private string ExpandEnvironment(string text)
+        {
+            for (int i = 0; i < 5 && text.Contains("%"); i++)
+            {
+
+                text = Environment.ExpandEnvironmentVariables(text);
+            }
+            return text;
+        }
 
         #region Serialize/Deserialize
 

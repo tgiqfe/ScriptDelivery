@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using LiteDB;
+using LiteDB;
 using ScriptDelivery.Lib;
 using ScriptDelivery.Server.Lib.Syslog;
 using System.IO;
@@ -17,13 +17,12 @@ namespace ScriptDelivery.Server.Logs
         protected ReaderWriterLock _rwLock = null;
         //protected LogstashTransport _logstash = null;
         protected SyslogTransport _syslog = null;
-        //protected LiteDatabase _liteDB = null;
+        protected LiteDatabase _liteDB = null;
 
         protected virtual bool _logAppend { get; }
 
         #region LiteDB methods
 
-        /*
         protected LiteDatabase GetLiteDB()
         {
             string dbPath = Path.Combine(
@@ -31,16 +30,13 @@ namespace ScriptDelivery.Server.Logs
                 "LocalDB_" + DateTime.Now.ToString("yyyyMMdd") + ".db");
             return new LiteDatabase($"Filename={dbPath};Connection=shared");
         }
-        */
 
-        /*
         protected ILiteCollection<T> GetCollection<T>(string tableName) where T : LogBodyBase
         {
             var collection = _liteDB.GetCollection<T>(tableName);
             collection.EnsureIndex(x => x.Serial, true);
             return collection;
         }
-        */
 
         #endregion
 
@@ -54,7 +50,7 @@ namespace ScriptDelivery.Server.Logs
             catch { }
 
             if (_writer != null) { _writer.Dispose(); }
-            //if (_liteDB != null) { _liteDB.Dispose(); }
+            if (_liteDB != null) { _liteDB.Dispose(); }
             if (_syslog != null) { _syslog.Dispose(); }
         }
 
