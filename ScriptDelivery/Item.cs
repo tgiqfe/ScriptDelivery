@@ -16,33 +16,18 @@ namespace ScriptDelivery
 
         /// <summary>
         /// 実行ファイルへのパス
-        /// 単一実行ファイルにした場合、Assembly.Locationが使用できないので、Processからファイルパスを取得
         /// </summary>
-        //public static readonly string AssemblyPath = Assembly.GetExecutingAssembly().Location;
-        public static readonly string ExecFilePath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+        public static readonly string ExecFilePath = Process.GetCurrentProcess().MainModule.FileName;
 
         /// <summary>
         /// 実行ファイルの名前(プロセス名)
         /// </summary>
-        //public static readonly string ProcessName = Path.GetFileNameWithoutExtension(ExecFilePath);
         public static readonly string ProcessName = "ScriptDelivery";
 
         /// <summary>
         /// 実行ファイルの場所
         /// </summary>
         public static readonly string ExecDirectoryPath = Path.GetDirectoryName(ExecFilePath);
-
-        /// <summary>
-        /// ワークフォルダー
-        /// システムアカウントの場合は実行ファイルの場所。それ以外はTempフォルダー配下
-        /// </summary>
-        //  無しで良いかもしれない
-        /*
-        public static readonly string WorkDirectoryPath =
-            EnumRun.Lib.UserInfo.IsSystemAccount ?
-                ExecDirectoryPath :
-                Path.Combine(Path.GetTempPath(), "EnumRun");
-        */
 
         #endregion
         #region Serial

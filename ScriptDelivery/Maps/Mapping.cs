@@ -14,6 +14,7 @@ namespace ScriptDelivery.Maps
 
         public Work Work { get; set; }
 
+        /*
         /// <summary>
         /// CSV出力用。各lineを作成
         /// RequireのRule、WorkのDownloadは、それぞれ最初の1つのみを使用。(Csvでは、2つ以上のRuleやDownloadに対応しない想定)
@@ -36,7 +37,6 @@ namespace ScriptDelivery.Maps
                 Work.Downloads[0].Password ?? "",
             };
         }
-
-
+        */
     }
 }

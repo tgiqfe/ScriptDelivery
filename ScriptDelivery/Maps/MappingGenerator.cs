@@ -177,7 +177,27 @@ namespace ScriptDelivery.Maps
                 "UserName",
                 "Password",
             };
-            CsvWriter.Write(tw, _csvHeader, list.Select(x => x.ToParamArray()));
+
+            Func<Mapping, string[]> toParamArray = (mapping) =>
+            {
+                return new string[]
+                {
+                    mapping.Require.GetRequireMode().ToString(),
+                    mapping.Require.RequireRules[0].GetRuleTarget().ToString(),
+                    mapping.Require.RequireRules[0].GetRuleMatch().ToString(),
+                    mapping.Require.RequireRules[0].GetInvert().ToString(),
+                    mapping.Require.RequireRules?.Length > 0 ?
+                        string.Join(" ", mapping.Require.RequireRules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",
+                    mapping.Work.Downloads[0].SourcePath ?? "",
+                    mapping.Work.Downloads[0].DestinationPath ?? "",
+                    mapping.Work.Downloads[0].GetForce().ToString(),
+                    mapping.Work.Downloads[0].UserName ?? "",
+                    mapping.Work.Downloads[0].Password ?? "",
+                };
+            };
+
+            //CsvWriter.Write(tw, _csvHeader, list.Select(x => x.ToParamArray()));
+            CsvWriter.Write(tw, _csvHeader, list.Select(x => toParamArray(x)));
         }
 
         #endregion
