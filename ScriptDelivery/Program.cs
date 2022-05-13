@@ -1,34 +1,55 @@
-﻿using ScriptDelivery.Lib;
-using System.IO;
-using System.Text.RegularExpressions;
-using ScriptDelivery.Requires;
-using ScriptDelivery.Works;
+using System;
+using System.Text;
 using ScriptDelivery;
-using ScriptDelivery.Net;
+using ScriptDelivery.Files;
 
-bool debug = false;
-if (debug)
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+var options = new System.Text.Json.JsonSerializerOptions()
 {
-    ScriptDelivery.Test.SettingFile.Create01();
+    //Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    IgnoreReadOnlyProperties = true,
+    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+    //WriteIndented = true,
+    //Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+};
 
-    Console.ReadLine();
-    Environment.Exit(0);
-}
+#region Routing
 
+app.MapGet("/", () => "");
 
-ProcessLogger logger = new ProcessLogger("sd.log");
+app.MapPost("/", () => "");
 
-using (var session = new ClientSession("http://localhost:5160", logger))
+app.MapPost("/map", () =>
 {
-    session.DownloadMappingFile().Wait();
-    session.MapMathcingCheck();
-    session.DownloadSmbFile();
-    session.DownloadHttpSearch().Wait();
-    session.DownloadHttpStart().Wait();
-}
+    return Item.MappingFileCollection.Content;
+});
 
+app.MapPost("/download/list", async (HttpContext context) =>
+{
+    if (context.Request.HasJsonContentType())
+    {
+        List<DownloadFile> dlFileList = await context.Request.ReadFromJsonAsync<List<DownloadFile>>();
+        Item.DownloadFileCollection.GetResponse(dlFileList);
+        await context.Response.WriteAsJsonAsync(dlFileList, options);
+    }
+});
 
+app.MapGet("/download/files", async (HttpContext context) =>
+{
+    string fileName = context.Request.Query["fileName"];
+    string filePath = Path.Combine(Item.Setting.FilesPath, fileName);
+    context.Response.Headers.Add("Content-Disposition", "attachment; filename=" + System.Web.HttpUtility.UrlEncode(fileName));
+    await context.Response.SendFileAsync(filePath);
+});
 
+#endregion
 
-Console.ReadLine();
+var worker = new SessionWorker();
+worker.OnStart();
+
+app.Run();
+
+worker.OnStop();
 

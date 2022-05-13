@@ -355,3 +355,4 @@ ScriptDelivery.Server/store
 # Logs code
 !ScriptDelivery/Logs/
 !ScriptDelivery.Server/Logs/
+!ScriptDeliveryClient/Logs/

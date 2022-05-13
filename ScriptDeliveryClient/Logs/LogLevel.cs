@@ -1,4 +1,4 @@
-﻿namespace ScriptDelivery.Logs
+﻿namespace ScriptDelivery
 {
     public enum LogLevel
     {
