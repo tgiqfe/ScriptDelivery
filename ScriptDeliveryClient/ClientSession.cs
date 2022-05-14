@@ -102,24 +102,28 @@ namespace ScriptDelivery
 
             foreach (var mapping in MappingList)
             {
-                mapping.Work.Downloads.ToList().ForEach(x =>
+                foreach (var download in mapping.Work.Downloads)
                 {
-                    if (x.Source.StartsWith("\\\\"))
+                    if (string.IsNullOrEmpty(download.Source) || string.IsNullOrEmpty(download.Destination))
+                    {
+                        _logger.Write(LogLevel.Attention, null, "Parameter mission, Source or Destination or both.");
+                    }
+                    else if (download.Source.StartsWith("\\\\"))
                     {
                         //  Smbダウンロード用ファイル
-                        SmbDownloadList.Add(x.Source);
+                        SmbDownloadList.Add(download.Source);
                     }
                     else
                     {
                         //  Htttpダウンロード用ファイル
                         HttpDownloadList.Add(new DownloadFile()
                         {
-                            Name = x.Source,
-                            DestinationPath = x.Destination,
-                            Overwrite = x.GetForce(),
+                            Name = download.Source,
+                            DestinationPath = download.Destination,
+                            Overwrite = !download.GetKeep(),
                         });
                     }
-                });
+                }
             }
         }
 

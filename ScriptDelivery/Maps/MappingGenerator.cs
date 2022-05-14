@@ -33,10 +33,9 @@ namespace ScriptDelivery.Maps
                         ".yml" => DeserializeYaml(sr),
                         ".yaml" => DeserializeYaml(sr),
                         ".csv" => DeserializeCsv(sr),
-                        ".txt" => null,
+                        ".txt" => DeserializeTxt(sr),
                         _ => null,
                     };
-                    //list.ForEach(x => x.FileName = fileName);
                 }
             }
             else if (Directory.Exists(filePath))
@@ -70,6 +69,7 @@ namespace ScriptDelivery.Maps
                         SerializeCsv(list, sw);
                         break;
                     case ".txt":
+                        SerializeTxt(list, sw);
                         break;
                 }
             }
@@ -153,8 +153,8 @@ namespace ScriptDelivery.Maps
                 mapping.Work.Downloads = new Download[1] { new Download() };
                 mapping.Work.Downloads[0].Source = line["Source"];
                 mapping.Work.Downloads[0].Source = line["Destination"];
-                mapping.Work.Downloads[0].Force = line["Force"];
-                mapping.Work.Downloads[0].UserName = line["UserName"];
+                mapping.Work.Downloads[0].Keep = line["Keep"];
+                mapping.Work.Downloads[0].UserName = line["User"];
                 mapping.Work.Downloads[0].Password = line["Password"];
 
                 list.Add(mapping);
@@ -173,8 +173,8 @@ namespace ScriptDelivery.Maps
                 "Param",
                 "Source",
                 "Destination",
-                "Force",
-                "UserName",
+                "Keep",
+                "User",
                 "Password",
             };
 
@@ -190,7 +190,7 @@ namespace ScriptDelivery.Maps
                         string.Join(" ", mapping.Require.Rules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",
                     mapping.Work.Downloads[0].Source ?? "",
                     mapping.Work.Downloads[0].Destination ?? "",
-                    mapping.Work.Downloads[0].GetForce().ToString(),
+                    mapping.Work.Downloads[0].GetKeep().ToString(),
                     mapping.Work.Downloads[0].UserName ?? "",
                     mapping.Work.Downloads[0].Password ?? "",
                 };
@@ -198,6 +198,170 @@ namespace ScriptDelivery.Maps
 
             //CsvWriter.Write(tw, _csvHeader, list.Select(x => x.ToParamArray()));
             CsvWriter.Write(tw, _csvHeader, list.Select(x => toParamArray(x)));
+        }
+
+        #endregion
+        #region Txt
+
+        private static List<Mapping> DeserializeTxt(TextReader tr)
+        {
+            System.Text.RegularExpressions.Regex pattern_comment =
+                new System.Text.RegularExpressions.Regex(@"(?<=^[^'""]*)\s*#.*$|(?<=^([^'""]*([^'""]*['""]){2})*)\s*#.*$");
+            System.Text.RegularExpressions.Regex pattern_delimiter =
+                new System.Text.RegularExpressions.Regex(@"(?<=^[^\{\}]+),|(?<=(\{.*\})+[^\{]*),");
+
+            var list = new List<Mapping>();
+            Mapping mapping = null;
+            bool? isRequire = null;
+            string readLine = "";
+            while ((readLine = tr.ReadLine()?.Trim()) != null)
+            {
+                if (readLine.StartsWith("---"))
+                {
+                    if (mapping != null)
+                    {
+                        list.Add(mapping);
+                    }
+                    mapping = new Mapping();
+                    continue;
+                }
+                if (pattern_comment.IsMatch(readLine))
+                {
+                    readLine = pattern_comment.Replace(readLine, "");
+                }
+                if (readLine.StartsWith("Require:", StringComparison.OrdinalIgnoreCase))
+                {
+                    isRequire = true;
+                    continue;
+                }
+                else if (readLine.StartsWith("work:", StringComparison.OrdinalIgnoreCase))
+                {
+                    isRequire = false;
+                    continue;
+                }
+                if (isRequire != null)
+                {
+                    if (isRequire ?? false)
+                    {
+                        //  Require取得
+                        if (readLine.StartsWith("Mode:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            mapping.Require.Mode = readLine.Substring(readLine.IndexOf(":") + 1).Trim();
+                            continue;
+                        }
+                        string[] fields = pattern_delimiter.Split(readLine);
+                        foreach (string field in fields)
+                        {
+                            var rule = new RequireRule();
+                            string key = field.Substring(0, field.IndexOf(":")).Trim();
+                            string val = field.Substring(field.IndexOf(":")).Trim();
+                            switch (key.ToLower())
+                            {
+                                case "target":
+                                    rule.Target = val;
+                                    break;
+                                case "match":
+                                    rule.Match = val;
+                                    break;
+                                case "invert":
+                                    rule.Invert = val;
+                                    break;
+                                case "param":
+                                    rule.Param = new Dictionary<string, string>();
+                                    foreach (string pair in val.TrimStart('{').TrimEnd('}').Split(","))
+                                    {
+                                        string pairKey = pair.Substring(0, pair.IndexOf("="));
+                                        string pairVal = pair.Substring(pair.IndexOf("=") + 1);
+                                        rule.Param[pairKey] = pairVal;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //  Work取得
+                        string[] fields = pattern_delimiter.Split(readLine);
+                        foreach (string field in fields)
+                        {
+                            var download = new Download();
+                            string key = field.Substring(0, field.IndexOf(":")).Trim().ToLower();
+                            string val = field.Substring(field.IndexOf(":")).Trim();
+                            switch (key.ToLower())
+                            {
+                                case "source":
+                                    download.Source = val;
+                                    break;
+                                case "destination":
+                                    download.Destination = val;
+                                    break;
+                                case "keep":
+                                    download.Keep = val;
+                                    break;
+                                case "user":
+                                    download.UserName = val;
+                                    break;
+                                case "password":
+                                    download.Password = val;
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return null;
+        }
+
+        private static void SerializeTxt(List<Mapping> list, TextWriter tw)
+        {
+            foreach (var mapping in list)
+            {
+                tw.WriteLine("---");
+                tw.WriteLine("Require:");
+                tw.WriteLine("  Mode: {0}", mapping.Require.GetRequireMode());
+                foreach (var rule in mapping.Require.Rules)
+                {
+                    var sb = new StringBuilder();
+                    sb.Append("  Target: " + rule.Target);
+                    if (rule.GetRuleMatch() != RuleMatch.Equal)
+                    {
+                        sb.Append($", Match: {rule.GetRuleMatch()}");
+                    }
+                    if (rule.GetInvert())
+                    {
+                        sb.Append(", Invert: true");
+                    }
+                    if (rule.Param?.Count > 0)
+                    {
+                        string paramText = string.Join(", ",
+                            rule.Param.Select(x => $"{x.Key}={x.Value}"));
+                        sb.Append($", Param: {{ {paramText} }}");
+                    }
+                    tw.WriteLine(sb.ToString());
+                }
+                tw.WriteLine("Work:");
+                foreach (var download in mapping.Work.Downloads)
+                {
+                    var sb = new StringBuilder();
+                    sb.Append("  Source: " + download.Source);
+                    sb.Append(", Destination: " + download.Destination);
+                    if (download.GetKeep())
+                    {
+                        sb.Append(", Keep: true");
+                    }
+                    if (!string.IsNullOrEmpty(download.UserName))
+                    {
+                        sb.Append(", User: " + download.UserName);
+                    }
+                    if (!string.IsNullOrEmpty(download.Password))
+                    {
+                        sb.Append(", Password: " + download.Password);
+                    }
+                    tw.WriteLine(sb.ToString());
+                }
+            }
         }
 
         #endregion

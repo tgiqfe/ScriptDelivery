@@ -16,8 +16,8 @@ namespace ScriptDelivery.Maps.Works
         [YamlMember(Alias = "destination")]
         public string Destination { get; set; }
 
-        [YamlMember(Alias = "force")]
-        public string Force { get; set; }
+        [YamlMember(Alias = "keep")]
+        public string Keep { get; set; }
 
         [YamlMember(Alias = "user")]
         public string UserName { get; set; }
@@ -25,14 +25,14 @@ namespace ScriptDelivery.Maps.Works
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
 
-        public bool GetForce()
+        public bool GetKeep()
         {
-            return this.Force == null ?
+            return this.Keep == null ?
                 false :
                 new string[]
                 {
-                                "", "0", "-", "false", "fals", "no", "not", "none", "non", "empty", "null", "否", "不", "無", "dis", "disable", "disabled"
-                }.All(x => !x.Equals(this.Force, StringComparison.OrdinalIgnoreCase));
+                    "", "0", "-", "false", "fals", "no", "not", "none", "non", "empty", "null", "否", "不", "無", "dis", "disable", "disabled"
+                }.All(x => !x.Equals(this.Keep, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

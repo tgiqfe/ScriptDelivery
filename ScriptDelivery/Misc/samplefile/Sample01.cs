@@ -44,19 +44,19 @@ namespace ScriptDelivery.Misc.samplefile
                 {
                     Source = "example001.txt",
                     Destination = @"C:\App\Sample\Example001.txt",
-                    Force = "true",
+                    Keep = "true",
                 },
                 new Download()
                 {
                     Source = "example002.txt",
                     Destination = @"C:\App\Sample\Example002.txt",
-                    Force = "true",
                 },
             };
 
             var list = new List<Mapping>() { mapping };
-            MappingGenerator.Serialize(list, "sample04.yml");
-            MappingGenerator.Serialize(list, "sample04.csv");
+            MappingGenerator.Serialize(list, @"bin\sample01.yml");
+            MappingGenerator.Serialize(list, @"bin\sample01.csv");
+            MappingGenerator.Serialize(list, @"bin\sample01.txt");
         }
     }
 }
