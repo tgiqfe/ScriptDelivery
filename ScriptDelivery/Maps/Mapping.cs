@@ -10,6 +10,8 @@ namespace ScriptDelivery.Maps
 {
     internal class Mapping
     {
+        public string Name { get; set; }
+
         public Require Require { get; set; }
 
         public Work Work { get; set; }

@@ -37,6 +37,7 @@ namespace ScriptDelivery.Maps
                         _ => null,
                     };
                 }
+                list.ForEach(x => x.Name = Path.GetFileName(filePath));
             }
             else if (Directory.Exists(filePath))
             {
@@ -256,7 +257,7 @@ namespace ScriptDelivery.Maps
                         foreach (string field in fields)
                         {
                             string key = field.Substring(0, field.IndexOf(":")).Trim();
-                            string val = field.Substring(field.IndexOf(":")).Trim();
+                            string val = field.Substring(field.IndexOf(":") + 1).Trim();
                             switch (key.ToLower())
                             {
                                 case "target":

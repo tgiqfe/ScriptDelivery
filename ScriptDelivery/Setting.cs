@@ -56,7 +56,7 @@ namespace ScriptDelivery
         {
             this.MapsPath = "store/maps";
             this.FilesPath = "store/files";
-            this.LogsPath = "logs";
+            this.LogsPath = "store/logs";
             this.MinLogLevel = "info";
             this.Syslog = new ParamSyslog()
             {
