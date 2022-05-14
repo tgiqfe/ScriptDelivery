@@ -41,7 +41,7 @@ namespace ScriptDelivery
                 //WriteIndented = true,
                 //Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
-            _logger.Write(LogLevel.Info, "Connect server => {0}", _server);
+            _logger.Write(LogLevel.Info, null, "Connect server => {0}", _server);
         }
 
         /// <summary>
@@ -90,12 +90,12 @@ namespace ScriptDelivery
                 {
                     return true;
                 }
-                IEnumerable<bool> results = x.Require.Rules.Select(x =>
+                IEnumerable<bool> results = x.Require.Rules.Select(y =>
                 {
-                    MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
+                    MatcherBase matcher = MatcherBase.Activate(y.GetRuleTarget());
                     matcher.SetLogger(_logger);
-                    matcher.SetParam(x.Param);
-                    return (matcher.CheckParam() ^ x.GetInvert()) && matcher.IsMatch(x.GetRuleMatch());
+                    matcher.SetParam(y.Param);
+                    return matcher.CheckParam() && (matcher.IsMatch(y.GetRuleMatch()) ^ y.GetInvert());
                 });
                 return mode switch
                 {

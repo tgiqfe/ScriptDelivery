@@ -7,7 +7,7 @@ using ScriptDelivery.Logs;
 
 #region Debug
 
-bool debug = true;
+bool debug = false;
 if (debug)
 {
     ScriptDelivery.Misc.samplefile.Sample01.Create01();

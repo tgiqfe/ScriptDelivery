@@ -41,12 +41,5 @@ namespace ScriptDelivery.Files
             Item.Logger.Write(Logs.LogLevel.Info, null, "MapFileList", "MapFiles => [{0}]",
                 string.Join(", ", _list.Select(x => x.Name)));
         }
-
-        /*
-        public void ContentToList(string content)
-        {
-            _list = JsonSerializer.Deserialize<List<MappingFile>>(content);
-        }
-        */
     }
 }

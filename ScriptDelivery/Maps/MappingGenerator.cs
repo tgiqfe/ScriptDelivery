@@ -232,11 +232,13 @@ namespace ScriptDelivery.Maps
                 if (readLine.StartsWith("Require:", StringComparison.OrdinalIgnoreCase))
                 {
                     isRequire = true;
+                    mapping.Require = new Require();
                     continue;
                 }
                 else if (readLine.StartsWith("Work:", StringComparison.OrdinalIgnoreCase))
                 {
                     isRequire = false;
+                    mapping.Work = new Work();
                     continue;
                 }
                 if (isRequire != null)
@@ -250,9 +252,9 @@ namespace ScriptDelivery.Maps
                             continue;
                         }
                         string[] fields = pattern_delimiter.Split(readLine);
+                        var rule = new RequireRule();
                         foreach (string field in fields)
                         {
-                            var rule = new RequireRule();
                             string key = field.Substring(0, field.IndexOf(":")).Trim();
                             string val = field.Substring(field.IndexOf(":")).Trim();
                             switch (key.ToLower())
@@ -277,16 +279,19 @@ namespace ScriptDelivery.Maps
                                     break;
                             }
                         }
+                        mapping.Require.Rules ??= new RequireRule[0];
+                        mapping.Require.Rules = mapping.Require.Rules.Concat(new RequireRule[] { rule }).ToArray();
                     }
                     else
                     {
                         //  Work取得
                         string[] fields = pattern_delimiter.Split(readLine);
+                        var download = new Download();
                         foreach (string field in fields)
                         {
-                            var download = new Download();
+
                             string key = field.Substring(0, field.IndexOf(":")).Trim().ToLower();
-                            string val = field.Substring(field.IndexOf(":")).Trim();
+                            string val = field.Substring(field.IndexOf(":") + 1).Trim();
                             switch (key.ToLower())
                             {
                                 case "source":
@@ -306,6 +311,8 @@ namespace ScriptDelivery.Maps
                                     break;
                             }
                         }
+                        mapping.Work.Downloads ??= new Download[0];
+                        mapping.Work.Downloads = mapping.Work.Downloads.Concat(new Download[] { download }).ToArray();
                     }
                 }
             }

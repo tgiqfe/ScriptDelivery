@@ -37,11 +37,15 @@ namespace ScriptDelivery
                 try
                 {
                     _rwLock.AcquireWriterLock(1000);
-                    _writer.WriteLine(string.Join("[{0}]<{1}>{2} {3}",
+
+                    string logmessage = string.Format("[{0}]<{1}>{2} {3}",
                         DateTime.Now.ToString("yyyy/MM/dd HH::mm:ss"),
                         level,
                         scriptFile,
-                        message));
+                        message);
+
+                    Console.WriteLine(logmessage);
+                    _writer.WriteLine(logmessage);
                 }
                 catch { }
                 finally
