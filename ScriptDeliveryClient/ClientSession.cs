@@ -174,9 +174,11 @@ namespace ScriptDelivery
             {
                 foreach (var dlFile in HttpDownloadList)
                 {
+                    string dstPath = ExpandEnvironment(dlFile.DestinationPath);
+
                     //  ローカル側のファイルとの一致チェック
                     if (!(dlFile.Downloadable ?? false)) { continue; }
-                    if (dlFile.CompareFile(dlFile.DestinationPath) && !(dlFile.Overwrite ?? false))
+                    if (dlFile.CompareFile(dstPath) && !(dlFile.Overwrite ?? false))
                     {
                         continue;
                     }
@@ -191,20 +193,29 @@ namespace ScriptDelivery
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
                             using (var stream = await response.Content.ReadAsStreamAsync())
-                            using (var fs = new FileStream(dlFile.DestinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            using (var fs = new FileStream(dstPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 stream.CopyTo(fs);
                             }
 
-                            _logger.Write(LogLevel.Info, "Success, file download. [{0}]", dlFile.DestinationPath);
+                            _logger.Write(LogLevel.Info, "Success, file download. [{0}]", dstPath);
                         }
                         else
                         {
-                            _logger.Write(LogLevel.Info, "Failed, file download. [{0}]", dlFile.DestinationPath);
+                            _logger.Write(LogLevel.Info, "Failed, file download. [{0}]", dstPath);
                         }
                     }
                 }
             }
+        }
+
+        private string ExpandEnvironment(string text)
+        {
+            for (int i = 0; i < 5 && text.Contains("%"); i++)
+            {
+                text = Environment.ExpandEnvironmentVariables(text);
+            }
+            return text;
         }
 
         /// <summary>

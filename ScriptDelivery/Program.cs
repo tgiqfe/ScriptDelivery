@@ -5,6 +5,18 @@ using ScriptDelivery.Files;
 using System.Web;
 using ScriptDelivery.Logs;
 
+#region Debug
+
+bool debug = true;
+if (debug)
+{
+    ScriptDelivery.Misc.samplefile.Sample01.Create01();
+    Console.ReadLine();
+    Environment.Exit(0);
+}
+
+#endregion
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 

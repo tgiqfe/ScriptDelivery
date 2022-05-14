@@ -26,13 +26,13 @@ namespace ScriptDelivery.Maps.Requires
         public RuleTarget GetRuleTarget()
         {
             return ValuesAttribute.GetEnumValue<RuleTarget>(
-                this.GetType().GetProperty("RuleTarget"), this.Target);
+                this.GetType().GetProperty("Target"), this.Target);
         }
 
         public RuleMatch GetRuleMatch()
         {
             return ValuesAttribute.GetEnumValue<RuleMatch>(
-                this.GetType().GetProperty("RuleMatch"), this.Match);
+                this.GetType().GetProperty("Match"), this.Match);
         }
 
         public bool GetInvert()

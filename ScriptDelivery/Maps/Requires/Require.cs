@@ -20,7 +20,7 @@ namespace ScriptDelivery.Maps.Requires
         {
             return ValuesAttribute.GetEnumValue<RequireMode>(
                 this.GetType().GetProperty(
-                    "RequireMode", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                    "Mode", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 this.Mode);
         }
     }

@@ -8,8 +8,6 @@ using ScriptDelivery;
 bool debug = false;
 if (debug)
 {
-    //ScriptDelivery.Test.SettingFile.Create01();
-
     Console.ReadLine();
     Environment.Exit(0);
 }

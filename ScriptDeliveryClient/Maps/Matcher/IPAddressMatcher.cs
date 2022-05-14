@@ -90,6 +90,8 @@ namespace ScriptDeliveryClient.Maps.Matcher
         /// <returns></returns>
         private bool RangeMatch()
         {
+            //  [実装予定] this.IPAddressの1～3オクテットの値とはマッチ確認必要有り
+
             var _nics = GetNICsFromInterface();
 
             int startNum = int.TryParse(this.StartAddress, out int tempStart) ? tempStart : 0;

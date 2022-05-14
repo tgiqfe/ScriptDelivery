@@ -1,0 +1,2 @@
+﻿Mode,Target,Match,Invert,Param,Source,Destination,Force,UserName,Password
+And,HostName,Equal,False,name=HOSTNAME01,example001.txt,C:\App\Sample\Example001.txt,True,,
