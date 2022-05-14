@@ -81,7 +81,7 @@ namespace ScriptDelivery
                 {
                     return true;
                 }
-                IEnumerable<bool> results = x.Require.RequireRules.Select(x =>
+                IEnumerable<bool> results = x.Require.Rules.Select(x =>
                 {
                     MatcherBase matcher = MatcherBase.Activate(x.GetRuleTarget());
                     matcher.SetLogger(_logger);
@@ -104,18 +104,18 @@ namespace ScriptDelivery
             {
                 mapping.Work.Downloads.ToList().ForEach(x =>
                 {
-                    if (x.SourcePath.StartsWith("\\\\"))
+                    if (x.Source.StartsWith("\\\\"))
                     {
                         //  Smbダウンロード用ファイル
-                        SmbDownloadList.Add(x.SourcePath);
+                        SmbDownloadList.Add(x.Source);
                     }
                     else
                     {
                         //  Htttpダウンロード用ファイル
                         HttpDownloadList.Add(new DownloadFile()
                         {
-                            Name = x.SourcePath,
-                            DestinationPath = x.DestinationPath,
+                            Name = x.Source,
+                            DestinationPath = x.Destination,
                             Overwrite = x.GetForce(),
                         });
                     }

@@ -62,6 +62,11 @@ namespace ScriptDelivery
         public static Setting Setting { get; set; }
 
         /// <summary>
+        /// ログ出力用
+        /// </summary>
+        public static ServerLogger Logger { get; set; }
+
+        /// <summary>
         /// Mappingのリストとそれらの操作
         /// </summary>
         public static MappingFileCollection MappingFileCollection { get; set; }
@@ -70,11 +75,6 @@ namespace ScriptDelivery
         /// ダウンロード対象ファイルのリスト
         /// </summary>
         public static DownloadFileCollection DownloadFileCollection { get; set; }
-
-        /// <summary>
-        /// ログ出力用
-        /// </summary>
-        public static ServerLogger Logger { get; set; }
 
         /// <summary>
         /// アプリケーションの現在のバージョン

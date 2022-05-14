@@ -11,17 +11,17 @@ namespace ScriptDelivery.Maps.Requires
     internal class Require
     {
         [YamlMember(Alias = "mode"), Values("Mode")]
-        public string RequireMode { get; set; }
+        public string Mode { get; set; }
 
         [YamlMember(Alias = "rule")]
-        public RequireRule[] RequireRules { get; set; }
+        public RequireRule[] Rules { get; set; }
 
         public RequireMode GetRequireMode()
         {
             return ValuesAttribute.GetEnumValue<RequireMode>(
                 this.GetType().GetProperty(
                     "RequireMode", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                this.RequireMode);
+                this.Mode);
         }
     }
 }

@@ -129,12 +129,12 @@ namespace ScriptDelivery.Maps
             {
                 var mapping = new Mapping();
                 mapping.Require = new Require();
-                mapping.Require.RequireMode = line["Mode"];
+                mapping.Require.Mode = line["Mode"];
 
-                mapping.Require.RequireRules = new RequireRule[1] { new RequireRule() };
-                mapping.Require.RequireRules[0].RuleTarget = line["Target"];
-                mapping.Require.RequireRules[0].RuleMatch = line["Match"];
-                mapping.Require.RequireRules[0].Invert = line["Invert"];
+                mapping.Require.Rules = new RequireRule[1] { new RequireRule() };
+                mapping.Require.Rules[0].Target = line["Target"];
+                mapping.Require.Rules[0].Match = line["Match"];
+                mapping.Require.Rules[0].Invert = line["Invert"];
 
                 var dictionary = new Dictionary<string, string>();
                 separator.Split(line["Param"]).
@@ -147,12 +147,12 @@ namespace ScriptDelivery.Maps
                             dictionary[fields[0]] = fields[1];
                         }
                     });
-                mapping.Require.RequireRules[0].Param = dictionary;
+                mapping.Require.Rules[0].Param = dictionary;
 
                 mapping.Work = new Work();
                 mapping.Work.Downloads = new Download[1] { new Download() };
-                mapping.Work.Downloads[0].SourcePath = line["Source"];
-                mapping.Work.Downloads[0].SourcePath = line["Destination"];
+                mapping.Work.Downloads[0].Source = line["Source"];
+                mapping.Work.Downloads[0].Source = line["Destination"];
                 mapping.Work.Downloads[0].Force = line["Force"];
                 mapping.Work.Downloads[0].UserName = line["UserName"];
                 mapping.Work.Downloads[0].Password = line["Password"];
@@ -183,13 +183,13 @@ namespace ScriptDelivery.Maps
                 return new string[]
                 {
                     mapping.Require.GetRequireMode().ToString(),
-                    mapping.Require.RequireRules[0].GetRuleTarget().ToString(),
-                    mapping.Require.RequireRules[0].GetRuleMatch().ToString(),
-                    mapping.Require.RequireRules[0].GetInvert().ToString(),
-                    mapping.Require.RequireRules?.Length > 0 ?
-                        string.Join(" ", mapping.Require.RequireRules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",
-                    mapping.Work.Downloads[0].SourcePath ?? "",
-                    mapping.Work.Downloads[0].DestinationPath ?? "",
+                    mapping.Require.Rules[0].GetRuleTarget().ToString(),
+                    mapping.Require.Rules[0].GetRuleMatch().ToString(),
+                    mapping.Require.Rules[0].GetInvert().ToString(),
+                    mapping.Require.Rules?.Length > 0 ?
+                        string.Join(" ", mapping.Require.Rules[0].Param.Select(x => $"{x.Key}={x.Value}")) : "",
+                    mapping.Work.Downloads[0].Source ?? "",
+                    mapping.Work.Downloads[0].Destination ?? "",
                     mapping.Work.Downloads[0].GetForce().ToString(),
                     mapping.Work.Downloads[0].UserName ?? "",
                     mapping.Work.Downloads[0].Password ?? "",

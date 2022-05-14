@@ -11,10 +11,10 @@ namespace ScriptDelivery.Maps.Works
     internal class Download
     {
         [YamlMember(Alias = "source")]
-        public string SourcePath { get; set; }
+        public string Source { get; set; }
 
         [YamlMember(Alias = "destination")]
-        public string DestinationPath { get; set; }
+        public string Destination { get; set; }
 
         [YamlMember(Alias = "force")]
         public string Force { get; set; }

@@ -351,6 +351,7 @@ MigrationBackup/
 
 # TestFolder
 ScriptDelivery.Server/store
+ScriptDelivery/store
 
 # Logs code
 !ScriptDelivery/Logs/

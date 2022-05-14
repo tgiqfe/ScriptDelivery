@@ -38,14 +38,14 @@ namespace ScriptDelivery
             Item.Setting = Setting.Deserialize("setting.json");
             Item.Setting.ChangePath();
 
+            //  ログ出力開始
+            Item.Logger = new Logs.ServerLogger(Item.Setting);
+
             //  Mappingリストを取得
             Item.MappingFileCollection = new MappingFileCollection(Item.Setting.MapsPath);
 
             //  ダウンロードリストを取得
             Item.DownloadFileCollection = new DownloadFileCollection(Item.Setting.FilesPath);
-
-            //  ログ出力開始
-            Item.Logger = new Logs.ServerLogger(Item.Setting);
 
             //  アプリケーションバージョン
             Item.CurrentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();

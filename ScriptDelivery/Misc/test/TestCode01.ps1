@@ -13,10 +13,12 @@ $url = "http://localhost:5000"
 ################################################################
 
 # / へのGetアクセス
-Invoke-RestMethod -Method Get -Uri "${url}/"
+$res = Invoke-RestMethod -Method Get -Uri "${url}/"
+($res -ne $null) -and ($res -eq "")
 
 # / へのPostアクセス可否
-Invoke-RestMethod -Method Post -Uri "${url}/"
+$res = Invoke-RestMethod -Method Post -Uri "${url}/"
+($res -ne $null) -and ($res -eq "")
 
 # /map へアクセスしてMapping情報を取得
 $res = Invoke-RestMethod -Method Post -Uri "${url}/map"

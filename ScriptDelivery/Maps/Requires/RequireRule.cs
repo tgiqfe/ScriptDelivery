@@ -11,10 +11,10 @@ namespace ScriptDelivery.Maps.Requires
     internal class RequireRule
     {
         [YamlMember(Alias = "target"), Values("Target")]
-        public string RuleTarget { get; set; }
+        public string Target { get; set; }
 
         [YamlMember(Alias = "match"), Values("Match")]
-        public string RuleMatch { get; set; }
+        public string Match { get; set; }
 
         [YamlMember(Alias = "invert")]
         public string Invert { get; set; }
@@ -26,13 +26,13 @@ namespace ScriptDelivery.Maps.Requires
         public RuleTarget GetRuleTarget()
         {
             return ValuesAttribute.GetEnumValue<RuleTarget>(
-                this.GetType().GetProperty("RuleTarget"), this.RuleTarget);
+                this.GetType().GetProperty("RuleTarget"), this.Target);
         }
 
         public RuleMatch GetRuleMatch()
         {
             return ValuesAttribute.GetEnumValue<RuleMatch>(
-                this.GetType().GetProperty("RuleMatch"), this.RuleMatch);
+                this.GetType().GetProperty("RuleMatch"), this.Match);
         }
 
         public bool GetInvert()
