@@ -41,7 +41,7 @@ app.MapPost("/map", async (HttpContext context) =>
     string address = $"{context.Connection.RemoteIpAddress}:{context.Connection.RemotePort}";
 
     Item.Logger.Write(ScriptDelivery.Logs.LogLevel.Info, address, "Post_map", "Send, MapFile");
-    
+
     context.Response.Headers.Add("App-Version", Item.CurrentVersion);
     context.Response.ContentType = "application/json; charset=utf-8";
     await context.Response.WriteAsync(Item.MappingFileCollection.Content);

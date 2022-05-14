@@ -59,6 +59,15 @@ namespace ScriptDelivery
                     string json = await response.Content.ReadAsStringAsync();
                     this.MappingList = JsonSerializer.Deserialize<List<Mapping>>(json);
                     _logger.Write(LogLevel.Info, "Success, download mapping object.");
+
+                    //  バージョンチェック用の処理
+                    /*
+                    var appVersion = response.Headers.FirstOrDefault(x => x.Key == "App-Version");
+                    if(appVersion != System.Relction.Assebmly.GetExecutingAssembly().GetName().Version.ToString())
+                    {
+                        //  サーバとバージョン不一致と判明。アップデート等対応
+                    }
+                    */
                 }
                 else
                 {

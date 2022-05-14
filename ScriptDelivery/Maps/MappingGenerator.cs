@@ -234,7 +234,7 @@ namespace ScriptDelivery.Maps
                     isRequire = true;
                     continue;
                 }
-                else if (readLine.StartsWith("work:", StringComparison.OrdinalIgnoreCase))
+                else if (readLine.StartsWith("Work:", StringComparison.OrdinalIgnoreCase))
                 {
                     isRequire = false;
                     continue;
@@ -309,9 +309,9 @@ namespace ScriptDelivery.Maps
                     }
                 }
             }
+            list.Add(mapping);
 
-
-            return null;
+            return list;
         }
 
         private static void SerializeTxt(List<Mapping> list, TextWriter tw)
