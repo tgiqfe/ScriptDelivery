@@ -3,7 +3,7 @@ using ScriptDelivery.Logs;
 
 namespace ScriptDelivery.Files
 {
-    public class DownloadFileCollection
+    public class DownloadFileCollection : IStoredFileCollection
     {
         private List<DownloadFile> _list = null;
 

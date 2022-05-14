@@ -8,7 +8,7 @@ using ScriptDelivery.Files;
 
 namespace ScriptDelivery.Files
 {
-    internal class MappingFileCollection
+    internal class MappingFileCollection : IStoredFileCollection
     {
         private List<MappingFile> _list = null;
 

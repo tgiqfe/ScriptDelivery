@@ -10,6 +10,9 @@ namespace ScriptDelivery
 {
     public class SessionWorker : IDisposable
     {
+        private DirectoryWatcher _mappingFileWatcher = null;
+        private DirectoryWatcher _downloadFileWatcher = null;
+
         public SessionWorker()
         {
             OnStart();
@@ -42,10 +45,14 @@ namespace ScriptDelivery
             Item.Logger = new Logs.ServerLogger(Item.Setting);
 
             //  Mappingリストを取得
-            Item.MappingFileCollection = new MappingFileCollection(Item.Setting.MapsPath);
+            var mappingFileCollection = new MappingFileCollection(Item.Setting.MapsPath);
+            _mappingFileWatcher = new DirectoryWatcher(Item.Setting.MapsPath, mappingFileCollection);
+            Item.MappingFileCollection = mappingFileCollection;
 
             //  ダウンロードリストを取得
-            Item.DownloadFileCollection = new DownloadFileCollection(Item.Setting.FilesPath);
+            var downloadFileCollection = new DownloadFileCollection(Item.Setting.FilesPath);
+            _downloadFileWatcher = new DirectoryWatcher(Item.Setting.FilesPath, downloadFileCollection);
+            Item.DownloadFileCollection = downloadFileCollection;
 
             //  アプリケーションバージョン
             Item.CurrentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -56,6 +63,9 @@ namespace ScriptDelivery
         /// </summary>
         private void OnStop()
         {
+            _mappingFileWatcher.Dispose();
+            _downloadFileWatcher.Dispose();
+
             //  ログ出力終了
             if (Item.Logger != null)
             {
