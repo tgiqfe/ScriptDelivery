@@ -2,7 +2,7 @@
 using System.Text;
 using System.Diagnostics;
 
-namespace ScriptDelivery
+namespace ScriptDeliveryClient.Logs.ProcessLog
 {
     internal class ProcessLogger
     {

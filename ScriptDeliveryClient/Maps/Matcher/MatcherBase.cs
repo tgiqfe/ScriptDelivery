@@ -9,6 +9,8 @@ using ScriptDelivery.Maps.Requires;
 using ScriptDelivery.Maps.Works;
 using ScriptDelivery;
 using ScriptDelivery.Maps;
+using ScriptDeliveryClient.Logs.ProcessLog;
+using ScriptDeliveryClient.Logs;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {
@@ -191,7 +193,7 @@ namespace ScriptDeliveryClient.Maps.Matcher
             bool ret = true;
 
             var props = this.GetType().GetProperties(
-                BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+                BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
             var mAny = new Dictionary<int, bool>();
             foreach (var prop in props)
             {
@@ -214,7 +216,7 @@ namespace ScriptDeliveryClient.Maps.Matcher
             }
             if (mAny.Count > 0) { ret &= mAny.Any(x => x.Value); }
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Warn, null, 
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, null,
                 "Parameter check => {0}", ret ? "Success" : "Failed");
 
             return ret;

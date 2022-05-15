@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using ScriptDelivery.Maps;
 using ScriptDelivery.Maps.Requires;
 using ScriptDelivery;
+using ScriptDeliveryClient.Logs;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {

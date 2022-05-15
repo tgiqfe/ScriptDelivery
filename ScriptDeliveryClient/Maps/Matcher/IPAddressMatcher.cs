@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using System.Net;
 using ScriptDelivery.Maps.Requires;
 using ScriptDelivery;
+using ScriptDeliveryClient.Logs;
+using ScriptDeliveryClient.Lib.Infos;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ScriptDeliveryClient.Lib;
 using ScriptDelivery.Maps;
 using ScriptDelivery.Maps.Requires;
-using ScriptDelivery;
+using ScriptDeliveryClient.Logs;
 
 namespace ScriptDeliveryClient.Maps.Matcher
 {

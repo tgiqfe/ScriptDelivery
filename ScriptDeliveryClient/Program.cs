@@ -3,7 +3,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ScriptDelivery.Maps.Requires;
 using ScriptDelivery.Maps.Works;
-using ScriptDelivery;
+using ScriptDeliveryClient;
+using ScriptDeliveryClient.Logs.ProcessLog;
 
 bool debug = false;
 if (debug)
@@ -14,13 +15,10 @@ if (debug)
 
 
 ProcessLogger logger = new ProcessLogger("sd.log");
+var setting = new Setting();
 
-using (var session = new ClientSession("http://localhost:5000", logger))
-{
-    session.DownloadMappingFile().Wait();
-    session.MapMathcingCheck();
-    session.DownloadSmbFile();
-    session.DownloadHttpSearch().Wait();
-    session.DownloadHttpStart().Wait();
-}
+//  ScriptDeliveryサーバからスクリプトをダウンロード
+var sdc = new ClientSession(setting, logger);
+sdc.StartDownload();
 
+Console.ReadLine();
