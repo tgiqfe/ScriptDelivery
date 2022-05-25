@@ -10,7 +10,11 @@ using ScriptDelivery.Logs;
 bool debug = false;
 if (debug)
 {
-    ScriptDelivery.Misc.samplefile.Sample01.Create01();
+    var sampleMap = ScriptDelivery.Maps.MappingGenerator.Deserialize("bin\\sample01.txt");
+    ScriptDelivery.Maps.MappingGenerator.Serialize(sampleMap, "bin\\sample01.txt");
+    ScriptDelivery.Maps.MappingGenerator.Serialize(sampleMap, "bin\\sample01.csv");
+    ScriptDelivery.Maps.MappingGenerator.Serialize(sampleMap, "bin\\sample01.json");
+
     Console.ReadLine();
     Environment.Exit(0);
 }
@@ -56,9 +60,9 @@ app.MapPost("/download/list", async (HttpContext context) =>
     {
         Item.Logger.Write(ScriptDelivery.Logs.LogLevel.Info, address, "Post_download_list", "Send, DownloadList");
 
-        List<DownloadHttp> dlFileList = await context.Request.ReadFromJsonAsync<List<DownloadHttp>>();
-        Item.DownloadFileCollection.RequestToResponse(dlFileList);
-        await context.Response.WriteAsJsonAsync(dlFileList, options);
+        List<DownloadHttp> reqList = await context.Request.ReadFromJsonAsync<List<DownloadHttp>>();
+        List<DownloadHttp> resList = Item.DownloadFileCollection.RequestToResponse(reqList);
+        await context.Response.WriteAsJsonAsync(resList, options);
     }
     else
     {
@@ -78,6 +82,19 @@ app.MapGet("/download/files", async (HttpContext context) =>
 
     context.Response.Headers.Add("Content-Disposition", "attachment; filename=" + System.Web.HttpUtility.UrlEncode(fileName));
     await context.Response.SendFileAsync(filePath);
+});
+
+//  LogReceive—p
+app.MapPost("/logs/{table}", (HttpContext context) =>
+{
+    var syncIOFeature = context.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpBodyControlFeature>();
+    if (syncIOFeature != null)
+    {
+        syncIOFeature.AllowSynchronousIO = true;
+    }
+    var table = context.Request.RouteValues["table"]?.ToString();
+    Item.DynamicLogger.Write(table, context.Request.Body);
+    return "";
 });
 
 #endregion

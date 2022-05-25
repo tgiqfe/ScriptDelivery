@@ -8,7 +8,7 @@ using ScriptDelivery.Maps;
 using ScriptDelivery.Maps.Requires;
 using ScriptDeliveryClient.Logs;
 
-namespace ScriptDeliveryClient.Maps.Matcher
+namespace ScriptDeliveryClient.ScriptDelivery.Maps.Matcher
 {
     /// <summary>
     /// 環境変数のマッチ確認
@@ -35,15 +35,19 @@ namespace ScriptDeliveryClient.Maps.Matcher
 
         public override bool IsMatch(RuleMatch ruleMatch)
         {
+            string logTitle = "IsMatch";
+
             this.Location ??= EnvLocation.All;
 
-            bool ret =  ruleMatch switch
+            bool ret = ruleMatch switch
             {
                 RuleMatch.Equal => EqualMatch(),
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention,
+                logTitle,
+                $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

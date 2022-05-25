@@ -12,7 +12,7 @@ namespace ScriptDeliveryClient
     {
         public static string ProcessName = "ScriptDeliveryClient";
 
-        public static string WorkDirectoryPath = Path.Combine(Path.GetTempPath(), "EnumRun");
+        public static string WorkDirectoryPath = Path.Combine(Path.GetTempPath(), "ScriptDeliveryClient");
 
         public static string ExecDirectoryPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
     }

@@ -12,7 +12,7 @@ using ScriptDelivery;
 using ScriptDeliveryClient.Logs;
 using ScriptDeliveryClient.Lib.Infos;
 
-namespace ScriptDeliveryClient.Maps.Matcher
+namespace ScriptDeliveryClient.ScriptDelivery.Maps.Matcher
 {
     /// <summary>
     /// IPアドレスのマッチ確認
@@ -41,6 +41,8 @@ namespace ScriptDeliveryClient.Maps.Matcher
 
         public override bool IsMatch(RuleMatch ruleMatch)
         {
+            string logTitle = "IsMatch";
+
             _info ??= new NetworkInfo();
 
             bool ret = ruleMatch switch
@@ -51,7 +53,9 @@ namespace ScriptDeliveryClient.Maps.Matcher
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention,
+                logTitle,
+                $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

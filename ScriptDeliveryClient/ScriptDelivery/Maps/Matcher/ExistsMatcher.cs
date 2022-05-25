@@ -11,7 +11,7 @@ using ScriptDelivery.Maps.Requires;
 using ScriptDelivery;
 using ScriptDeliveryClient.Logs;
 
-namespace ScriptDeliveryClient.Maps.Matcher
+namespace ScriptDeliveryClient.ScriptDelivery.Maps.Matcher
 {
     internal class ExistsMatcher : MatcherBase
     {
@@ -23,6 +23,8 @@ namespace ScriptDeliveryClient.Maps.Matcher
 
         public override bool IsMatch(RuleMatch ruleMatch)
         {
+            string logTitle = "IsMatch";
+
             bool ret = ruleMatch switch
             {
                 RuleMatch.File => FileMatch(),
@@ -31,7 +33,9 @@ namespace ScriptDeliveryClient.Maps.Matcher
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention,
+                logTitle,
+                $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }

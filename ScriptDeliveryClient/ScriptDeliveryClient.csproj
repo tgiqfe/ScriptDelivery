@@ -7,30 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ScriptDelivery\Files\DownloadHttp.cs" Link="Files\DownloadHttp.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\KeysAttribute.cs" Link="Maps\KeysAttribute.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Mapping.cs" Link="Maps\Mapping.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\Require.cs" Link="Maps\Requires\Require.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\RequireMode.cs" Link="Maps\Requires\RequireMode.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\RequireRule.cs" Link="Maps\Requires\RequireRule.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\RuleMatch.cs" Link="Maps\Requires\RuleMatch.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Requires\RuleTarget.cs" Link="Maps\Requires\RuleTarget.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\SubCandidate.cs" Link="Maps\SubCandidate.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\ValuesAttribute.cs" Link="Maps\ValuesAttribute.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Works\DeleteFile.cs" Link="Maps\Works\DeleteFile.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Works\Download.cs" Link="Maps\Works\Download.cs" />
-    <Compile Include="..\ScriptDelivery\Maps\Works\Work.cs" Link="Maps\Works\Work.cs" />
+    <Compile Include="..\ScriptDelivery\Files\DownloadHttp.cs" Link="ScriptDelivery\DownloadHttp.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\KeysAttribute.cs" Link="ScriptDelivery\Maps\KeysAttribute.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Mapping.cs" Link="ScriptDelivery\Maps\Mapping.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\Require.cs" Link="ScriptDelivery\Maps\Requires\Require.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\RequireMode.cs" Link="ScriptDelivery\Maps\Requires\RequireMode.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\RequireRule.cs" Link="ScriptDelivery\Maps\Requires\RequireRule.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\RuleMatch.cs" Link="ScriptDelivery\Maps\Requires\RuleMatch.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Requires\RuleTarget.cs" Link="ScriptDelivery\Maps\Requires\RuleTarget.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\SubCandidate.cs" Link="ScriptDelivery\Maps\SubCandidate.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\ValuesAttribute.cs" Link="ScriptDelivery\Maps\ValuesAttribute.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Works\DeleteFile.cs" Link="ScriptDelivery\Maps\Works\DeleteFile.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Works\Download.cs" Link="ScriptDelivery\Maps\Works\Download.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Works\Work.cs" Link="ScriptDelivery\Maps\Works\Work.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management" Version="6.0.0" />
-    <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Maps\Requires\" />
-    <Folder Include="Maps\Works\" />
-    <Folder Include="Files\" />
+    <Folder Include="ScriptDelivery\Maps\Requires\" />
+    <Folder Include="ScriptDelivery\Maps\Works\" />
   </ItemGroup>
 
 </Project>

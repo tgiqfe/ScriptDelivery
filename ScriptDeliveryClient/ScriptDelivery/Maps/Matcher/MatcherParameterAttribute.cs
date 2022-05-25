@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ScriptDeliveryClient.Maps.Matcher
+﻿
+namespace ScriptDeliveryClient.ScriptDelivery.Maps.Matcher
 {
     internal class MatcherParameterAttribute : Attribute
     {

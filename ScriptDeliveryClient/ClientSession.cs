@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScriptDelivery.Maps.Requires;
-using ScriptDeliveryClient.Maps.Matcher;
+using ScriptDeliveryClient.ScriptDelivery.Maps.Matcher;
 using ScriptDelivery.Maps;
 using System.Text.Json;
 using System.Net;
@@ -15,6 +15,8 @@ using ScriptDeliveryClient.Lib.Infos;
 
 namespace ScriptDeliveryClient
 {
+    //  このクラスは使用せず、ScriptDeliveryClientから使用する。
+
     internal class ClientSession 
     {
         public bool Enabled { get; set; }

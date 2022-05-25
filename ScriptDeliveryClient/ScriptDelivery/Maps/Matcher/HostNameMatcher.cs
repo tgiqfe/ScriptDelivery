@@ -9,7 +9,7 @@ using ScriptDelivery.Maps.Requires;
 using ScriptDeliveryClient.Logs;
 using ScriptDeliveryClient.Lib.Infos;
 
-namespace ScriptDeliveryClient.Maps.Matcher
+namespace ScriptDeliveryClient.ScriptDelivery.Maps.Matcher
 {
     /// <summary>
     /// ホスト名のマッチ確認
@@ -31,6 +31,8 @@ namespace ScriptDeliveryClient.Maps.Matcher
 
         public override bool IsMatch(RuleMatch ruleMatch)
         {
+            string logTitle = "IsMatch";
+
             bool ret = ruleMatch switch
             {
                 RuleMatch.Equal => EqualMatch(),
@@ -39,7 +41,9 @@ namespace ScriptDeliveryClient.Maps.Matcher
                 _ => false,
             };
 
-            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention, $"MatchType => {ruleMatch}, Match => {ret}");
+            _logger.Write(ret ? LogLevel.Debug : LogLevel.Attention,
+                logTitle,
+                $"MatchType => {ruleMatch}, Match => {ret}");
 
             return ret;
         }
