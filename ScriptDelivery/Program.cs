@@ -56,7 +56,7 @@ app.MapPost("/download/list", async (HttpContext context) =>
     {
         Item.Logger.Write(ScriptDelivery.Logs.LogLevel.Info, address, "Post_download_list", "Send, DownloadList");
 
-        List<DownloadFile> dlFileList = await context.Request.ReadFromJsonAsync<List<DownloadFile>>();
+        List<DownloadHttp> dlFileList = await context.Request.ReadFromJsonAsync<List<DownloadHttp>>();
         Item.DownloadFileCollection.RequestToResponse(dlFileList);
         await context.Response.WriteAsJsonAsync(dlFileList, options);
     }

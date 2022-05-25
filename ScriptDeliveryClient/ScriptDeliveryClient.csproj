@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ScriptDelivery\Files\DownloadFile.cs" Link="Files\DownloadFile.cs" />
+    <Compile Include="..\ScriptDelivery\Files\DownloadHttp.cs" Link="Files\DownloadHttp.cs" />
     <Compile Include="..\ScriptDelivery\Maps\KeysAttribute.cs" Link="Maps\KeysAttribute.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Mapping.cs" Link="Maps\Mapping.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Requires\Require.cs" Link="Maps\Requires\Require.cs" />
@@ -17,6 +17,7 @@
     <Compile Include="..\ScriptDelivery\Maps\Requires\RuleTarget.cs" Link="Maps\Requires\RuleTarget.cs" />
     <Compile Include="..\ScriptDelivery\Maps\SubCandidate.cs" Link="Maps\SubCandidate.cs" />
     <Compile Include="..\ScriptDelivery\Maps\ValuesAttribute.cs" Link="Maps\ValuesAttribute.cs" />
+    <Compile Include="..\ScriptDelivery\Maps\Works\DeleteFile.cs" Link="Maps\Works\DeleteFile.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Works\Download.cs" Link="Maps\Works\Download.cs" />
     <Compile Include="..\ScriptDelivery\Maps\Works\Work.cs" Link="Maps\Works\Work.cs" />
   </ItemGroup>

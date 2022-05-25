@@ -42,7 +42,10 @@ namespace ScriptDelivery
             Item.Setting.ChangePath();
 
             //  ログ出力開始
-            Item.Logger = new Logs.ServerLogger(Item.Setting);
+            Item.Logger = new Logs.ServerLog.ServerLogger(Item.Setting);
+
+            //  DynamicLog受信/出力開始
+            Item.DynamicLogger = new Logs.DynamicLog.DynamicLogger(Item.Setting);
 
             //  Mappingリストを取得
             var mappingFileCollection = new MappingFileCollection(Item.Setting.MapsPath);
@@ -50,7 +53,7 @@ namespace ScriptDelivery
             Item.MappingFileCollection = mappingFileCollection;
 
             //  ダウンロードリストを取得
-            var downloadFileCollection = new DownloadFileCollection(Item.Setting.FilesPath);
+            var downloadFileCollection = new DownloadHttpCollection(Item.Setting.FilesPath);
             _downloadFileWatcher = new DirectoryWatcher(Item.Setting.FilesPath, downloadFileCollection);
             Item.DownloadFileCollection = downloadFileCollection;
 
@@ -67,10 +70,13 @@ namespace ScriptDelivery
             _downloadFileWatcher.Dispose();
 
             //  ログ出力終了
+            if (Item.DynamicLogger != null)
+            {
+                Item.DynamicLogger.CloseAsync().Wait();
+            }
             if (Item.Logger != null)
             {
-                Item.Logger.Dispose();
-                Item.Logger = null;
+                Item.Logger.CloseAsync().Wait();
             }
         }
 

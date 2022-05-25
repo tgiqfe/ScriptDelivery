@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YamlDotNet;
-using YamlDotNet.Serialization;
-
+﻿
 namespace ScriptDelivery.Maps.Requires
 {
     internal class RequireRule
     {
-        [YamlMember(Alias = "target"), Values("Target")]
+        [System.Text.Json.Serialization.JsonPropertyName("target")]
+        [Values("Target")]
         public string Target { get; set; }
 
-        [YamlMember(Alias = "match"), Values("Match")]
+        [System.Text.Json.Serialization.JsonPropertyName("match")]
+        [Values("Match")]
         public string Match { get; set; }
 
-        [YamlMember(Alias = "invert")]
+        [System.Text.Json.Serialization.JsonPropertyName("invert")]
         public string Invert { get; set; }
 
-        [YamlMember(Alias = "param")]
+        [System.Text.Json.Serialization.JsonPropertyName("param")]
         public Dictionary<string, string> Param { get; set; }
-
 
         public RuleTarget GetRuleTarget()
         {

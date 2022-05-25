@@ -27,7 +27,7 @@ namespace ScriptDeliveryClient
 
         private List<Mapping> MappingList = null;
         private List<string> SmbDownloadList = null;
-        private List<DownloadFile> HttpDownloadList = null;
+        private List<DownloadHttp> HttpDownloadList = null;
 
         /// <summary>
         /// コンストラクタ
@@ -75,7 +75,7 @@ namespace ScriptDeliveryClient
             if (this.Enabled)
             {
                 this.SmbDownloadList = new List<string>();
-                this.HttpDownloadList = new List<DownloadFile>();
+                this.HttpDownloadList = new List<DownloadHttp>();
 
                 using (var client = new HttpClient())
                 {
@@ -161,21 +161,21 @@ namespace ScriptDeliveryClient
             {
                 foreach (var download in mapping.Work.Downloads)
                 {
-                    if (string.IsNullOrEmpty(download.Source) || string.IsNullOrEmpty(download.Destination))
+                    if (string.IsNullOrEmpty(download.Path) || string.IsNullOrEmpty(download.Destination))
                     {
                         _logger.Write(LogLevel.Attention, null, "Parameter mission, Source or Destination or both.");
                     }
-                    else if (download.Source.StartsWith("\\\\"))
+                    else if (download.Path.StartsWith("\\\\"))
                     {
                         //  Smbダウンロード用ファイル
-                        SmbDownloadList.Add(download.Source);
+                        SmbDownloadList.Add(download.Path);
                     }
                     else
                     {
                         //  Htttpダウンロード用ファイル
-                        HttpDownloadList.Add(new DownloadFile()
+                        HttpDownloadList.Add(new DownloadHttp()
                         {
-                            Name = download.Source,
+                            Path = download.Path,
                             DestinationPath = download.Destination,
                             Overwrite = !download.GetKeep(),
                         });
@@ -209,7 +209,7 @@ namespace ScriptDeliveryClient
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string json = await response.Content.ReadAsStringAsync();
-                    HttpDownloadList = JsonSerializer.Deserialize<List<DownloadFile>>(json);
+                    HttpDownloadList = JsonSerializer.Deserialize<List<DownloadHttp>>(json);
 
                     _logger.Write(LogLevel.Info, "Success, download DownloadFile list object");
                 }
@@ -243,7 +243,7 @@ namespace ScriptDeliveryClient
                 //  ダウンロード要求を送信し、ダウンロード開始
                 var query = new Dictionary<string, string>()
                     {
-                        { "fileName", dlFile.Name }
+                        { "fileName", dlFile.Path }
                     };
                 using (var response = await client.GetAsync(uri + $"/download/files?{await new FormUrlEncodedContent(query).ReadAsStringAsync()}"))
                 {

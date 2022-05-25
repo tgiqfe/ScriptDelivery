@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YamlDotNet.Serialization;
-
+﻿
 namespace ScriptDelivery.Maps.Works
 {
     internal class Work
     {
-        [YamlMember(Alias = "download")]
+        [System.Text.Json.Serialization.JsonPropertyName("download")]
         public Download[] Downloads { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("delete"), Values("DeleteAction")]
+        public DeleteFile Delete { get; set; }
     }
 }
