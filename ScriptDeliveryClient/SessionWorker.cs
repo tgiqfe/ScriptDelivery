@@ -17,11 +17,9 @@ namespace ScriptDeliveryClient
 {
     //  このクラスは使用せず、ScriptDeliveryClientから使用する。
 
-    internal class ClientSession 
+    internal class SessionWorker 
     {
         public bool Enabled { get; set; }
-
-        
 
         private string uri = null;
         private Logs.ProcessLog.ProcessLogger _logger = null;
@@ -34,7 +32,7 @@ namespace ScriptDeliveryClient
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public ClientSession(Setting setting, Logs.ProcessLog.ProcessLogger logger)
+        public SessionWorker(Setting setting, Logs.ProcessLog.ProcessLogger logger)
         {
             if (setting.ScriptDelivery != null &&
                 (setting.ScriptDelivery.Process?.Equals(Item.ProcessName, StringComparison.OrdinalIgnoreCase) ?? false))

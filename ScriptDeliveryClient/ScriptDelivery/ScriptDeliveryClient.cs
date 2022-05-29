@@ -19,39 +19,36 @@ namespace ScriptDeliveryClient.ScriptDelivery
     internal class ScriptDeliveryClient
     {
         private ScriptDeliverySession _session = null;
-        private ProcessLogger _logger = null;
-        private string _filesPath = null;
+        private Logs.ProcessLog.ProcessLogger _logger = null;
 
+        private string _filesPath = null;
         private List<Mapping> _mappingList = null;
         private SmbDownloader _smbDownloader = null;
         private HttpDownloader _httpDownloader = null;
         private DeleteManager _deleteManager = null;
 
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public ScriptDeliveryClient(ScriptDeliverySession session, string filesPath, string logsPath, string trashPath, ProcessLogger logger)
+        public ScriptDeliveryClient(Setting setting, ScriptDeliverySession session, Logs.ProcessLog.ProcessLogger logger)
         {
             this._session = session;
+            this._logger = logger;
 
             if (session.EnableDelivery)
             {
-                _logger = logger;
-
-                _filesPath = filesPath;
+                _filesPath = setting.FilesPath;
                 _smbDownloader = new SmbDownloader(_logger);
                 _httpDownloader = new HttpDownloader(_filesPath, _logger);
-                _deleteManager = new DeleteManager(filesPath, trashPath, _logger);
+                _deleteManager = new DeleteManager(setting.FilesPath, setting.ScriptDelivery?.TrashPath, _logger);
             }
         }
 
         public void StartDownload()
         {
             string logTitle = "StartDownload";
-            _logger.Write(LogLevel.Info, logTitle, "Select ScriptDelivery server => {0}", _session.Uri);
 
             if (_session.EnableDelivery && _session.Enabled)
             {
+                _logger.Write(LogLevel.Info, logTitle, "Select ScriptDelivery server => {0}", _session.Uri);
+
                 DownloadMappingFile(_session.Client).Wait();
                 MapMathcingCheck();
 
@@ -71,7 +68,6 @@ namespace ScriptDeliveryClient.ScriptDelivery
 
             _logger.Write(LogLevel.Debug, logTitle, "ScriptDelivery init.");
             using (var content = new StringContent(""))
-            //using (var response = await client.PostAsync(_uri + "/map", content))
             using (var response = await client.PostAsync(_session.Uri + "/map", content))
             {
                 if (response.StatusCode == HttpStatusCode.OK)

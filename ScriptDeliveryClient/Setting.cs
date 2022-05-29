@@ -8,6 +8,8 @@ namespace ScriptDeliveryClient
 {
     internal class Setting
     {
+        public string FilesPath { get; set; }
+
         /// <summary>
         /// ScriptDelivery設定情報
         /// </summary>

@@ -17,8 +17,5 @@ if (debug)
 ProcessLogger logger = new ProcessLogger("sd.log");
 var setting = new Setting();
 
-//  ScriptDeliveryサーバからスクリプトをダウンロード
-var sdc = new ClientSession(setting, logger);
-sdc.StartDownload();
 
 Console.ReadLine();
